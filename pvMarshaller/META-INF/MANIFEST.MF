@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: pvMarshaller
+Bundle-SymbolicName: pvMarshaller
+Bundle-Version: 1.0.0.qualifier
+Export-Package: org.epics.pvmarshaller.marshaller,
+ org.epics.pvmarshaller.marshaller.api,
+ org.epics.pvmarshaller.marshaller.deserialisers,
+ org.epics.pvmarshaller.marshaller.serialisers,
+ org.epics.pvmarshaller.marshaller.tests
