@@ -46,8 +46,6 @@ public class ContainerSerialiser {
 		{
 			return true;
 		}
-		
-		System.out.println("not container");
 
 		return false;
 	}
@@ -88,11 +86,9 @@ public class ContainerSerialiser {
 	 * @param field The container field of the object
 	 * @param fieldBuilder The fieldBuilder object with the current structure
 	 * @param parentObject Object in which the container field resides
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
+	 * @throws Exception
 	 */
-	public void addToPVStructure(Field field, FieldBuilder fieldBuilder, Object parentObject) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	public void addToPVStructure(Field field, FieldBuilder fieldBuilder, Object parentObject) throws Exception {
 		String name = field.getName();
 		
 		Method m = Serialiser.findGetter(parentObject, field.getName());
@@ -162,11 +158,9 @@ public class ContainerSerialiser {
 	 * @param name The name of the field
 	 * @param fieldBuilder The fieldBuilder object
 	 * @param containerObject The container object
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
+	 * @throws Exception
 	 */
-	public void addToStructureWithContainerObject(Class<?> fieldType, String name, FieldBuilder fieldBuilder, Object containerObject) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	public void addToStructureWithContainerObject(Class<?> fieldType, String name, FieldBuilder fieldBuilder, Object containerObject) throws Exception {
 		
 		if (fieldType.isArray()) {
 			Class<?> componentType = fieldType.getComponentType();
@@ -337,7 +331,7 @@ public class ContainerSerialiser {
 			} else if (isArrayTypeContainer(componentType)) {
 				throw new IllegalArgumentException(fieldName + " is a list of lists.");
 			} else if (isStructureTypeContainer(componentType)) {
-				throw new IllegalArgumentException("Maps of lists of Maps are not currently supported: " + fieldName);
+				serialiser.getListSerialiser().setMapListValue(fieldName, structure, containerObject);
 			} else {
 				serialiser.getListSerialiser().setObjectListValue(fieldName, structure, containerObject);
 			}

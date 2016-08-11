@@ -39,14 +39,9 @@ public class UnionDeserialiser {
 	 * @param target The target object
 	 * @param fieldName The name of the field to populate
 	 * @param pvField The PVField to get the data from
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchFieldException
-	 * @throws SecurityException
-	 * @throws InstantiationException
+	 * @throws Exception
 	 */
-	public void deserialise(Object target, String fieldName, PVField pvField) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, NoSuchFieldException, SecurityException, InstantiationException {
+	public void deserialise(Object target, String fieldName, PVField pvField) throws Exception {
 		
 		if (pvField instanceof PVUnion) {
 			System.out.println("Was union");

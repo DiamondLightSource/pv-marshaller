@@ -2,6 +2,7 @@ package org.epics.pvmarshaller.marshaller.deserialisers;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -41,7 +42,7 @@ public class StructureDeserialiser {
 	 * @throws NoSuchFieldException
 	 * @throws SecurityException
 	 */
-	public Object createObjectFromPVStructure(PVStructure pvStructure) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException {
+	public Object createObjectFromPVStructure(PVStructure pvStructure) throws Exception {
 		return createObjectFromPVStructure(pvStructure, null);
 	}
 	
@@ -57,8 +58,7 @@ public class StructureDeserialiser {
 	 * @throws NoSuchFieldException
 	 * @throws SecurityException
 	 */
-	public Object createObjectFromPVStructure(PVStructure pvStructure, Class<?> objectClass) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException {
-
+	public Object createObjectFromPVStructure(PVStructure pvStructure, Class<?> objectClass) throws Exception {
 		Object newObject;
 		
 		String id = pvStructure.getStructure().getID();
@@ -67,13 +67,12 @@ public class StructureDeserialiser {
 			IPVStructureDeserialiser structureSeserialiser = registeredDeserialisers.get(id);
 			newObject = structureSeserialiser.fromPVStructure(deserialiser, pvStructure);
 		} else {
-			
 			if ((objectClass == null) || (objectClass == Object.class)) {
-				throw new IllegalArgumentException("Unknown class type: " + objectClass);
+				objectClass = Map.class;
 			}
 		
 			if (Map.class.isAssignableFrom(objectClass)) {
-				throw new IllegalArgumentException("Deserialising directly into a map is not currently supported");
+				return deserialiser.getMapDeserialiser().createMapFromPVStructure(pvStructure, objectClass, Object.class);
 			} else {
 			
 				if (objectClass.isInterface()) {
@@ -121,14 +120,9 @@ public class StructureDeserialiser {
 	 * @param target The target object
 	 * @param fieldName The name of the field to populate
 	 * @param pvField The PVField to get the data from
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchFieldException
-	 * @throws SecurityException
-	 * @throws InstantiationException
+	 * @throws Exception
 	 */
-	public void deserialise(Object target, String fieldName, PVField pvField) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, NoSuchFieldException, SecurityException, InstantiationException {
+	public void deserialise(Object target, String fieldName, PVField pvField) throws Exception {
 		
 		if (pvField instanceof BasePVStructure) {
 			BasePVStructure structureField = (BasePVStructure)pvField;

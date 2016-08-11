@@ -48,14 +48,9 @@ public class MapDeserialiser {
 	 * @param parentObject Parent object of the map
 	 * @param fieldName Field name of the map
 	 * @return
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws NoSuchFieldException
-	 * @throws SecurityException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
+	 * @throws Exception
 	 */
-	public Map createMapFromPVStructure(PVStructure pvStructure, Object parentObject, String fieldName) throws InstantiationException, IllegalAccessException, NoSuchFieldException, SecurityException, IllegalArgumentException, InvocationTargetException {
+	public Map createMapFromPVStructure(PVStructure pvStructure, Object parentObject, String fieldName) throws Exception {
 		
 		Class<?> mapClass = null;
 		Type keyClass;
@@ -80,14 +75,9 @@ public class MapDeserialiser {
 	 * @param mapClass The type of map
 	 * @param valueClass The value class of the map
 	 * @return
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws NoSuchFieldException
-	 * @throws SecurityException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
+	 * @throws Exception
 	 */
-	public Map createMapFromPVStructure(PVStructure pvStructure, Class<?> mapClass, Type valueClass) throws InstantiationException, IllegalAccessException, NoSuchFieldException, SecurityException, IllegalArgumentException, InvocationTargetException {
+	public Map createMapFromPVStructure(PVStructure pvStructure, Class<?> mapClass, Type valueClass) throws Exception {
 		
 		Map newMap;
 		
@@ -103,9 +93,6 @@ public class MapDeserialiser {
 		Field structureFields[] = structure.getFields();
 		
 		for (int i = 0; i < structureFields.length; i++) {
-			System.out.println(structure.getFieldName(i));
-			System.out.println(structureFields[i].getID());
-			System.out.println(structureFields[i].getType());
 			PVField pvField = pvStructure.getSubField(structure.getFieldName(i));
 			
 			switch (structureFields[i].getType()) {
@@ -144,49 +131,49 @@ public class MapDeserialiser {
 	 */
 	private static void setScalarValue(Map newMap, String key, PVField pvField, Type valueClass) {
 		if (pvField instanceof PVInt) {
-			if (valueClass.equals(Integer.class) || valueClass.equals(int.class)) {
+			if (valueClass.equals(Integer.class) || valueClass.equals(int.class) || valueClass.equals(Object.class)) {
 				PVInt bpvField = (PVInt)pvField;
 				newMap.put(key, bpvField.get());
 			} else {
 				throw new IllegalArgumentException("Attempted to put Integer into non-Integer map (" + valueClass + ")");
 			}
 		} else if (pvField instanceof PVShort) {
-			if (valueClass.equals(Short.class) || valueClass.equals(short.class)) {
+			if (valueClass.equals(Short.class) || valueClass.equals(short.class) || valueClass.equals(Object.class)) {
 			PVShort bpvField = (PVShort)pvField;
 			newMap.put(key, bpvField.get());
 			} else {
 				throw new IllegalArgumentException("Attempted to put Short into non-Short map (" + valueClass + ")");
 			}
 		} else if (pvField instanceof PVLong) {
-			if (valueClass.equals(Long.class) || valueClass.equals(long.class)) {
+			if (valueClass.equals(Long.class) || valueClass.equals(long.class) || valueClass.equals(Object.class)) {
 			PVLong bpvField = (PVLong)pvField;
 			newMap.put(key, bpvField.get());
 			} else {
 				throw new IllegalArgumentException("Attempted to put Long into non-Long map (" + valueClass + ")");
 			}
 		} else if (pvField instanceof PVByte) {
-			if (valueClass.equals(Byte.class) || valueClass.equals(byte.class)) {
+			if (valueClass.equals(Byte.class) || valueClass.equals(byte.class) || valueClass.equals(Object.class)) {
 			PVByte bpvField = (PVByte)pvField;
 			newMap.put(key, bpvField.get());
 			} else {
 				throw new IllegalArgumentException("Attempted to put Byte into non-Byte map (" + valueClass + ")");
 			}
 		} else if (pvField instanceof PVBoolean) {
-			if (valueClass.equals(Boolean.class) || valueClass.equals(boolean.class)) {
+			if (valueClass.equals(Boolean.class) || valueClass.equals(boolean.class) || valueClass.equals(Object.class)) {
 			PVBoolean bpvField = (PVBoolean)pvField;
 			newMap.put(key, bpvField.get());
 			} else {
 				throw new IllegalArgumentException("Attempted to put Boolean into non-Boolean map (" + valueClass + ")");
 			}
 		} else if (pvField instanceof PVFloat) {
-			if (valueClass.equals(Float.class) || valueClass.equals(float.class)) {
+			if (valueClass.equals(Float.class) || valueClass.equals(float.class) || valueClass.equals(Object.class)) {
 				PVFloat bpvField = (PVFloat)pvField;
 				newMap.put(key, bpvField.get());
 			} else {
 				throw new IllegalArgumentException("Attempted to put Float into non-Float map (" + valueClass + ")");
 			}
 		} else if (pvField instanceof PVDouble) {
-			if (valueClass.equals(Double.class) || valueClass.equals(double.class)) {
+			if (valueClass.equals(Double.class) || valueClass.equals(double.class) || valueClass.equals(Object.class)) {
 				PVDouble bpvField = (PVDouble)pvField;
 				newMap.put(key, bpvField.get());
 			} else {
@@ -196,7 +183,7 @@ public class MapDeserialiser {
 			if (valueClass.equals(Character.class) || valueClass.equals(char.class)) {
 				PVString bpvField = (PVString)pvField;
 				newMap.put(key, bpvField.get().charAt(0));
-			} else if (valueClass.equals(String.class)) {
+			} else if (valueClass.equals(String.class) || valueClass.equals(Object.class)) {
 				PVString bpvField = (PVString)pvField;
 				newMap.put(key, bpvField.get());
 			} else {
@@ -211,14 +198,14 @@ public class MapDeserialiser {
 	 * @param key the key in the map to populate
 	 * @param pvField the field to get the data from
 	 * @param valueClass the type of the value class in the map
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchFieldException
-	 * @throws SecurityException
-	 * @throws InstantiationException
+	 * @throws Exception
 	 */
-	private static void setScalarArrayValue(Map newMap, String key, PVField pvField, Type valueClass) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, NoSuchFieldException, SecurityException, InstantiationException {
+	private static void setScalarArrayValue(Map newMap, String key, PVField pvField, Type valueClass) throws Exception {
+		// If the valueClass is Object, then it's a map of Objects, so just use a list to hold the array.
+		if (valueClass == Object.class)
+		{
+			valueClass = List.class;
+		}
 		Object newObject = MapScalarArrayDeserialiser.deserialise(pvField, valueClass);
 		newMap.put(key, newObject);
 	}
@@ -229,14 +216,9 @@ public class MapDeserialiser {
 	 * @param key the key in the map to populate
 	 * @param pvField the field to get the data from
 	 * @param valueClass the type of the value class in the map
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchFieldException
-	 * @throws SecurityException
+	 * @throws Exception
 	 */
-	private void setStructureValue(Map newMap, String key, PVField pvField, Type valueClass) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException {
+	private void setStructureValue(Map newMap, String key, PVField pvField, Type valueClass) throws Exception {
 
 		if (pvField instanceof PVStructure) {
 			PVStructure structureField = (PVStructure)pvField;
@@ -246,11 +228,9 @@ public class MapDeserialiser {
 				Object newObject = deserialiser.getStructureDeserialiser().createObjectFromPVStructure(structureField, clazz);
 				newMap.put(key, newObject);
 			} else if (valueClass instanceof ParameterizedType) {
-				System.out.println("was param typeee");
 				Type rawType = ((ParameterizedType)valueClass).getRawType();
 				Class<?> rawClass = (Class<?>)rawType;
 				if (Map.class.isAssignableFrom(rawClass)) {
-					System.out.println("was a mappp");
 					ParameterizedType pt = (ParameterizedType)valueClass;
 					
 					Type innerKeyClass = pt.getActualTypeArguments()[0];
@@ -281,14 +261,14 @@ public class MapDeserialiser {
 	 * @param key the key in the map to populate
 	 * @param pvField the field to get the data from
 	 * @param valueClass the type of the value class in the map
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchFieldException
-	 * @throws SecurityException
+	 * @throws Exception
 	 */
-	private void setStructureArrayValue(Map newMap, String key, PVField pvField, Type valueClass) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException {
+	private void setStructureArrayValue(Map newMap, String key, PVField pvField, Type valueClass) throws Exception {
+		// If the valueClass is Object, then it's a map of Objects, so just use a list to hold the array.
+		if (valueClass == Object.class)
+		{
+			valueClass = List.class;
+		}
 		Object newObject = deserialiser.getStructureArrayDeserialiser().deserialise(pvField, valueClass);
 		newMap.put(key, newObject);
 	}
@@ -299,14 +279,9 @@ public class MapDeserialiser {
 	 * @param key the key in the map to populate
 	 * @param pvField the field to get the data from
 	 * @param valueClass the type of the value class in the map
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchFieldException
-	 * @throws SecurityException
+	 * @throws Exception
 	 */
-	private void setUnionValue(Map newMap, String key, PVField pvField, Type valueClass) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException {
+	private void setUnionValue(Map newMap, String key, PVField pvField, Type valueClass) throws Exception {
 		if (pvField instanceof PVUnion) {
 			PVUnion pvUnion = (PVUnion)pvField;
 			if (!pvUnion.getUnion().isVariant()) {
@@ -339,14 +314,14 @@ public class MapDeserialiser {
 	 * @param key the key in the map to populate
 	 * @param pvField the field to get the data from
 	 * @param valueClass the type of the value class in the map
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchFieldException
-	 * @throws SecurityException
+	 * @throws Exception
 	 */
-	private void setUnionArrayValue(Map newMap, String key, PVField pvField, Type valueClass) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException {
+	private void setUnionArrayValue(Map newMap, String key, PVField pvField, Type valueClass) throws Exception {
+		// If the valueClass is Object, then it's a map of Objects, so just use a list to hold the array.
+		if (valueClass == Object.class)
+		{
+			valueClass = List.class;
+		}
 		Object newObject = deserialiser.getUnionArrayDeserialiser().deserialise(pvField, valueClass);
 		newMap.put(key, newObject);
 	}

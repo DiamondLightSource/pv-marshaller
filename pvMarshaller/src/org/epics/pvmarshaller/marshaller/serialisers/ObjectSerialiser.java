@@ -39,11 +39,9 @@ public class ObjectSerialiser {
 	 * Creates a Structure that represents the given object
 	 * @param obj The object to serialise
 	 * @return
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
+	 * @throws Exception
 	 */
-	public Structure buildObject(Object obj) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException
+	public Structure buildObject(Object obj) throws Exception
 	{
 		Class<?> clazz = obj.getClass();
 		return buildObjectFromClass(clazz, obj);
@@ -54,11 +52,9 @@ public class ObjectSerialiser {
 	 * @param clazz The class of the object to serialise
 	 * @param obj The object to serialise
 	 * @return
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
+	 * @throws Exception
 	 */
-	public Structure buildObjectFromClass(Class<?> clazz, Object obj) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException
+	public Structure buildObjectFromClass(Class<?> clazz, Object obj) throws Exception
 	{
 		IPVStructureSerialiser customSerialiser = getCustomSerialiserForClass(clazz);
 		
@@ -74,7 +70,8 @@ public class ObjectSerialiser {
 	
 			while (classToCheck != Object.class)
 			{
-				for (Field field : classToCheck.getDeclaredFields())
+				Field[] declaredFields = classToCheck.getDeclaredFields();
+				for (Field field : declaredFields)
 				{
 					if (!field.getName().equals("this$0"))
 					{
@@ -143,7 +140,8 @@ public class ObjectSerialiser {
 			// Set values in structure
 			while (clazz != Object.class)
 			{
-				for (Field field : clazz.getDeclaredFields())
+				Field[] declaredFields = clazz.getDeclaredFields();
+				for (Field field : declaredFields)
 				{
 					if (!field.getName().equals("this$0"))
 					{
@@ -201,7 +199,8 @@ public class ObjectSerialiser {
 				if (customSerialiser != null) {
 					customSerialiser.populatePVStructure(serialiser, childObject, childPVStructure);
 				} else {
-					for (Field field : clazz.getDeclaredFields())
+					Field[] declaredFields = clazz.getDeclaredFields();
+					for (Field field : declaredFields)
 					{
 						if (!field.getName().equals("this$0"))
 						{

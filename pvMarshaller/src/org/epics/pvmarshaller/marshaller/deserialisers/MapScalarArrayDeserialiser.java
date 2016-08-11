@@ -557,6 +557,11 @@ public class MapScalarArrayDeserialiser {
 		} else if (isList(type)) {
             Class<?> listClass = getListComponentClass(type);
             
+            // If listClass is null, it's come from a generic map of objects. Set to string
+            if (listClass == null) {
+            	listClass = String.class;
+            }
+            
             if (listClass.equals(String.class)) {
     			List<String> list;
     			Class<?> clazz = getListClass(type);

@@ -19,20 +19,16 @@ public interface IPVStructureSerialiser<T> {
 	 * @param serialiser The serialiser member of the PVMarshaller
 	 * @param source The object to serialise
 	 * @return The Structure representation of the object
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
+	 * @throws Exception
 	 */
-	public Structure buildStructure(Serialiser serialiser, T source) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException;
+	public Structure buildStructure(Serialiser serialiser, T source) throws Exception;
 	
 	/**
 	 * Populates the specified PVStructure with data from the Object source
 	 * @param serialiser The serialiser member of the PVMarshaller
 	 * @param source The object to serialise
 	 * @param pvStructure The PVStructure object in which to populate the data
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
+	 * @throws Exception
 	 */
-	public void populatePVStructure(Serialiser serialiser, T source, PVStructure pvStructure) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException;
+	public void populatePVStructure(Serialiser serialiser, T source, PVStructure pvStructure) throws Exception;
 }

@@ -38,11 +38,9 @@ public class MapSerialiser {
 	 * Creates a Structure from a the given map
 	 * @param map The map to create the structure from
 	 * @return
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
+	 * @throws Exception
 	 */
-	public Structure buildStructureFromMap(Map<String, ?> map) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	public Structure buildStructureFromMap(Map<String, ?> map) throws Exception {
 		FieldCreate fieldCreate = FieldFactory.getFieldCreate();
 		FieldBuilder fieldBuilder = fieldCreate.createFieldBuilder();
 		
@@ -98,11 +96,9 @@ public class MapSerialiser {
 	 * @param map The map
 	 * @param objectClass The container class
 	 * @return
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
+	 * @throws Exception
 	 */
-	public Structure buildStructureFromContainerMap(Map<String, ?> map, Class<?> objectClass) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException
+	public Structure buildStructureFromContainerMap(Map<String, ?> map, Class<?> objectClass) throws Exception
 	{
 		FieldCreate fieldCreate = FieldFactory.getFieldCreate();
 		FieldBuilder fieldBuilder = fieldCreate.createFieldBuilder();
@@ -123,11 +119,9 @@ public class MapSerialiser {
 	 * @param map The map
 	 * @param objectClass The object class
 	 * @return
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
+	 * @throws Exception
 	 */
-	public Structure buildStructureFromObjectMap(Map<String, ?> map, Class<?> objectClass) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException
+	public Structure buildStructureFromObjectMap(Map<String, ?> map, Class<?> objectClass) throws Exception
 	{
 		FieldCreate fieldCreate = FieldFactory.getFieldCreate();
 		FieldBuilder fieldBuilder = fieldCreate.createFieldBuilder();

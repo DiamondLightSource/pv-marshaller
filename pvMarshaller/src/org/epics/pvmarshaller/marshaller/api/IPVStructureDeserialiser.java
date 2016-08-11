@@ -16,12 +16,7 @@ public interface IPVStructureDeserialiser {
 	 * @param deserialiser the deserialiser object of the PVMarshaller
 	 * @param pvStructure the PVStructure to deserialise
 	 * @return The created object
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchFieldException
-	 * @throws SecurityException
+	 * @throws Exception
 	 */
-	public Object fromPVStructure(Deserialiser deserialiser, PVStructure pvStructure) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException ;
+	public Object fromPVStructure(Deserialiser deserialiser, PVStructure pvStructure) throws Exception ;
 }

@@ -30,12 +30,15 @@ public class PrimitiveSerialiser {
 	 * @return
 	 */
 	public static boolean isPrimitive(Class<?> fieldType) {
-		if (fieldType.equals(Integer.class) || fieldType.equals(int.class) || fieldType.equals(Short.class)
-				|| fieldType.equals(short.class) || fieldType.equals(Long.class) || fieldType.equals(long.class)
-				|| fieldType.equals(Byte.class) || fieldType.equals(byte.class) || fieldType.equals(Boolean.class)
-				|| fieldType.equals(boolean.class) || fieldType.equals(Float.class) || fieldType.equals(float.class)
-				|| fieldType.equals(Double.class) || fieldType.equals(double.class) || fieldType.equals(Character.class)
-				|| fieldType.equals(char.class) || fieldType.equals(String.class)) {
+		if (fieldType.equals(Integer.class) || fieldType.equals(int.class) || 
+			fieldType.equals(Short.class) || fieldType.equals(short.class) || 
+			fieldType.equals(Long.class) || fieldType.equals(long.class) || 
+			fieldType.equals(Byte.class) || fieldType.equals(byte.class) || 
+			fieldType.equals(Boolean.class) || fieldType.equals(boolean.class) || 
+			fieldType.equals(Float.class) || fieldType.equals(float.class) || 
+			fieldType.equals(Double.class) || fieldType.equals(double.class) || 
+			fieldType.equals(Character.class) || fieldType.equals(char.class) || 
+			fieldType.equals(String.class)) {
 			return true;
 		}
 
@@ -111,7 +114,7 @@ public class PrimitiveSerialiser {
 	}
 
 	/**
-	 * Populates a PVStructure with data from a primitve
+	 * Populates a PVStructure with data from a primitive
 	 * @param field The field to get the data from
 	 * @param structure The PVStructure to populate
 	 * @param object The object to get the data from

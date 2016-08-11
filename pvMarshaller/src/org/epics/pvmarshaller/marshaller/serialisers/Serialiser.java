@@ -30,7 +30,7 @@ public class Serialiser {
 	 * @param source The object to convert
 	 * @param customSerialisers Collection of custom serialisers
 	 * @param idMappings Collection of id to class mappings
-	 * @return
+	 * @return PVStructure representing the source object
 	 * @throws Exception
 	 */
 	public PVStructure toPVStructure(Object source, Map<Class<?>, IPVStructureSerialiser<?>> customSerialisers, Map<Class<?>, String> idMappings) throws Exception
@@ -46,7 +46,7 @@ public class Serialiser {
 	/**
 	 * Converts an Object into a PVStructure
 	 * @param source The object to convert
-	 * @return
+	 * @return PVStructure representing the source object
 	 * @throws Exception
 	 */
 	public PVStructure toPVStructure(Object source) throws Exception
@@ -56,19 +56,17 @@ public class Serialiser {
 		PVStructure pvStructure = pvDataCreate.createPVStructure(requestStructure);
 		
 		setValues(source, pvStructure);
-
+		
 		return pvStructure;
 	}
 	
 	/**
 	 * Creates a Structure representation of the given source Object
 	 * @param source The Object to convert into a Structure
-	 * @return
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
+	 * @return Structure representing the source object
+	 * @throws Exception
 	 */
-	public Structure buildStructure(Object source) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	public Structure buildStructure(Object source) throws Exception {
 		return objectSerialiser.buildObject(source);
 	}
 	

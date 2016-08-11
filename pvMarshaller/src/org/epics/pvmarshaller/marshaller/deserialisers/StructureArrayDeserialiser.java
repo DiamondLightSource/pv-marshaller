@@ -38,14 +38,9 @@ public class StructureArrayDeserialiser {
 	 * @param target The target object
 	 * @param fieldName The field name
 	 * @param pvField The PVField to get the data from
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchFieldException
-	 * @throws SecurityException
-	 * @throws InstantiationException
+	 * @throws Exception
 	 */
-	public void deserialise(Object target, String fieldName, PVField pvField) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, NoSuchFieldException, SecurityException, InstantiationException {
+	public void deserialise(Object target, String fieldName, PVField pvField) throws Exception {
 		
 		if (pvField instanceof PVStructureArray) {
 			PVStructureArray structureArrayField = (PVStructureArray)pvField;
@@ -118,14 +113,9 @@ public class StructureArrayDeserialiser {
 	 * @param pvField The PVField to get the data from
 	 * @param valueClass The type of container to return
 	 * @return A container object representing the deserialised PVField
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchFieldException
-	 * @throws SecurityException
-	 * @throws InstantiationException
+	 * @throws Exception
 	 */
-	public Object deserialise(PVField pvField, Type valueClass) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, NoSuchFieldException, SecurityException, InstantiationException {
+	public Object deserialise(PVField pvField, Type valueClass) throws Exception {
 		
 		if (pvField instanceof PVStructureArray) {
 			PVStructureArray structureArrayField = (PVStructureArray)pvField;

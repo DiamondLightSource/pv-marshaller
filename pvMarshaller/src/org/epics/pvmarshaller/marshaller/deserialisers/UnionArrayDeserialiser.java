@@ -41,14 +41,9 @@ public class UnionArrayDeserialiser {
 	 * @param target The target object
 	 * @param fieldName The name of the field
 	 * @param pvField The PVField to get the data from
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchFieldException
-	 * @throws SecurityException
-	 * @throws InstantiationException
+	 * @throws Exception
 	 */
-	public void deserialise(Object target, String fieldName, PVField pvField) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, NoSuchFieldException, SecurityException, InstantiationException {
+	public void deserialise(Object target, String fieldName, PVField pvField) throws Exception {
 		if (pvField instanceof PVUnionArray) {
 			PVUnionArray unionArrayField = (PVUnionArray)pvField;
 			
@@ -153,14 +148,9 @@ public class UnionArrayDeserialiser {
 	 * @param pvField The PVField containing the Union Array data
 	 * @param valueClass The type of the object to return
 	 * @return The deserialised object
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchFieldException
-	 * @throws SecurityException
-	 * @throws InstantiationException
+	 * @throws Exception
 	 */
-	public Object deserialise(PVField pvField, Type valueClass) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, NoSuchFieldException, SecurityException, InstantiationException {
+	public Object deserialise(PVField pvField, Type valueClass) throws Exception {
 		if (pvField instanceof PVUnionArray) {
 			PVUnionArray unionArrayField = (PVUnionArray)pvField;
 			
@@ -215,6 +205,11 @@ public class UnionArrayDeserialiser {
 			} else if (ContainerFunctions.isList(valueClass) || valueClass.equals(Collection.class)) {
 	            Class<?> listClass = ContainerFunctions.getListClass(valueClass);
 	            Class<?> componentType = ContainerFunctions.getListComponentClass(valueClass);
+	            
+	            // If componentType is null, it's a list of generic Objects, so use Map
+	            if (componentType == null) {
+	            	componentType = Map.class;
+	            }
 
 				List list;
 				if (ContainerFunctions.isInterface(listClass)) {
@@ -241,14 +236,14 @@ public class UnionArrayDeserialiser {
 					} else if (unionValue instanceof PVStructureArray) {
 						throw new IllegalArgumentException("Union arrays of Structure Arrays are not supported");
 					} else {
-						throw new IllegalArgumentException("Unsupported union type");
+						throw new IllegalArgumentException("Unsupported union type: " + unionValue.getFieldName());
 					}
 										
 					list.add(newObject);
 				}
 				return list;
 			} else {
-				throw new IllegalArgumentException("Unsupported container type");
+				throw new IllegalArgumentException("Unsupported container type: " + valueClass);
 			}
 		}
 		return null;

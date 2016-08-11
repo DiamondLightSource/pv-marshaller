@@ -29,15 +29,10 @@ public class Deserialiser {
 	 * Converts the specified PVStructure into an object of the type specified
 	 * @param pvStructure The PVStructure to convert
 	 * @param targetClass The class of the expected output object
-	 * @return
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchFieldException
-	 * @throws SecurityException
+	 * @return An object of type T
+	 * @throws Exception
 	 */
-	public <T> T fromPVStructure(PVStructure pvStructure, Class<T> targetClass) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException {
+	public <T> T fromPVStructure(PVStructure pvStructure, Class<T> targetClass) throws Exception {
 		T deserialisedObject = (T)structureDeserialiser.createObjectFromPVStructure(pvStructure, targetClass);
  	    
 		return deserialisedObject;
@@ -48,15 +43,10 @@ public class Deserialiser {
 	 * @param pvStructure The PVStructure to convert
 	 * @param targetClass The class of the expected output object
 	 * @param customDeserialisers A collection of custom deserialisers
-	 * @return
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchFieldException
-	 * @throws SecurityException
+	 * @return An object of type T
+	 * @throws Exception
 	 */
-	public <T> T fromPVStructure(PVStructure pvStructure, Class<T> targetClass, Map<String, IPVStructureDeserialiser> customDeserialisers) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException {
+	public <T> T fromPVStructure(PVStructure pvStructure, Class<T> targetClass, Map<String, IPVStructureDeserialiser> customDeserialisers) throws Exception {
 		structureDeserialiser.setCustomDeserialisers(customDeserialisers);
 		
 		return fromPVStructure(pvStructure, targetClass);
