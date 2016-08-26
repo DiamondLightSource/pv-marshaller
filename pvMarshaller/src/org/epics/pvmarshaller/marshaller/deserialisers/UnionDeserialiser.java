@@ -1,7 +1,5 @@
 package org.epics.pvmarshaller.marshaller.deserialisers;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.epics.pvdata.pv.PVBoolean;
 import org.epics.pvdata.pv.PVByte;
 import org.epics.pvdata.pv.PVDouble;
@@ -44,7 +42,6 @@ public class UnionDeserialiser {
 	public void deserialise(Object target, String fieldName, PVField pvField) throws Exception {
 		
 		if (pvField instanceof PVUnion) {
-			System.out.println("Was union");
 			PVUnion pvUnion = (PVUnion)pvField;
 			
 			if (!pvUnion.getUnion().isVariant()) {

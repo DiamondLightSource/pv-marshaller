@@ -68,7 +68,6 @@ public class StructureArrayDeserialiser {
 			
 			if (parameters[0].getType().isArray()) {
 				Class<?> componentType = parameters[0].getType().getComponentType();
-				System.out.println(componentType);
 				
 				Object newArray[] = (Object[])Array.newInstance(componentType, dataArray.length);
 				
@@ -139,7 +138,6 @@ public class StructureArrayDeserialiser {
 			
 			if (ContainerFunctions.isArray(valueClass)) {
 				Class<?> componentType = ContainerFunctions.getComponentType(valueClass);
-				System.out.println(componentType);
 				
 				Object newArray[] = (Object[])Array.newInstance(componentType, dataArray.length);
 				

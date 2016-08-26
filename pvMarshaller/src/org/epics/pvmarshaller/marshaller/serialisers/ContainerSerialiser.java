@@ -106,13 +106,8 @@ public class ContainerSerialiser {
 				// Java doesn't support Arrays of generics so should never get here
 				throw new IllegalArgumentException("Unable to create an Arrays of Maps");
 			} else {
-				Method method = Serialiser.findGetter(parentObject, field.getName());
-				Object arrayObject = method.invoke(parentObject);
-				int arrayLength = Array.getLength(arrayObject);
-				if (arrayLength >  0) {
-					Union union = FieldFactory.getFieldCreate().createVariantUnion();
-					fieldBuilder.addArray(name, union);
-				}
+				Union union = FieldFactory.getFieldCreate().createVariantUnion();
+				fieldBuilder.addArray(name, union);
 			}
 		} else if (List.class.isAssignableFrom(fieldType)) {
 			field.setAccessible(true);
@@ -127,10 +122,8 @@ public class ContainerSerialiser {
 				throw new IllegalArgumentException("PVData does not support Arrays of Arrays");
 			} else {
 				// All lists are union arrays
-				if (list.size() > 0) {
-					Union union = FieldFactory.getFieldCreate().createVariantUnion();
-					fieldBuilder.addArray(name, union);
-				}
+				Union union = FieldFactory.getFieldCreate().createVariantUnion();
+				fieldBuilder.addArray(name, union);
 			}
 		} else if (Map.class.isAssignableFrom(fieldType)) {
 			ParameterizedType pt = (ParameterizedType)field.getGenericType();

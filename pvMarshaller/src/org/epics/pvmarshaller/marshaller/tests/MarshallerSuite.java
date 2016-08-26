@@ -21,6 +21,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	CustomDeserialiserTests.class,
 	UnionTests.class,
 	MiscellaneousTests.class,
+	SelectFieldSerialisationTests.class,
 	EndToEndTests.class
 })
 public class MarshallerSuite {

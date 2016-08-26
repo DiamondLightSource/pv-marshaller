@@ -56,6 +56,7 @@ public class InheritanceTests {
 		try {
 			serialisedPVStructure = marshaller.toPVStructure(testClass);
 		} catch (Exception e) {
+			e.printStackTrace();
 			fail(e.getMessage());
 		}
 		

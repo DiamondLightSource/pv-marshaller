@@ -808,6 +808,139 @@ public class ContainerTests {
 		
 		TestHelper.assertPVStructuresEqual(expectedPVStructure, serialisedPVStructure);
 	}
+	
+	@Test
+	public void testEmptyArrayOfIntegers() {
+		PVMarshaller marshaller = new PVMarshaller();
+		
+		// Create test class to serialise
+		ArrayOfIntsTestClass testClass = new ArrayOfIntsTestClass();
+
+		testClass.integerArray = new int[0];
+		
+		// Create expected PVStructure
+		FieldCreate fieldCreate = FieldFactory.getFieldCreate();
+		PVDataCreate pvDataCreate = PVDataFactory.getPVDataCreate();
+		Structure structure = fieldCreate.createFieldBuilder().
+			addArray("integerArray", ScalarType.pvInt).
+			createStructure();
+		
+		PVStructure expectedPVStructure = pvDataCreate.createPVStructure(structure);
+		
+		PVStructure serialisedPVStructure = null;
+		
+		try {
+			serialisedPVStructure = marshaller.toPVStructure(testClass);
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+		
+		System.out.println("Serialised Structure:\n" + serialisedPVStructure + "\n---\n");
+		
+		TestHelper.assertPVStructuresEqual(expectedPVStructure, serialisedPVStructure);
+	}
+	
+	@Test
+	public void testEmptyArrayOfObjects() {
+		PVMarshaller marshaller = new PVMarshaller();
+		
+		// Create test class to serialise
+		ArrayOfObjectsTestClass testClass = new ArrayOfObjectsTestClass();
+
+		testClass.objectArray = new ObjectTestClass[0];
+		
+		// Create expected PVStructure
+		FieldCreate fieldCreate = FieldFactory.getFieldCreate();
+		PVDataCreate pvDataCreate = PVDataFactory.getPVDataCreate();
+		
+		Union union = fieldCreate.createVariantUnion();
+		
+		Structure structure = fieldCreate.createFieldBuilder().
+			addArray("objectArray", union).
+			createStructure();
+		
+		PVStructure expectedPVStructure = pvDataCreate.createPVStructure(structure);
+		
+		PVStructure serialisedPVStructure = null;
+		
+		try {
+			serialisedPVStructure = marshaller.toPVStructure(testClass);
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+				
+		TestHelper.assertPVStructuresEqual(expectedPVStructure, serialisedPVStructure);
+	}
+	
+	@Test
+	public void testEmptyListOfIntegers() {
+		PVMarshaller marshaller = new PVMarshaller();
+		
+		// Create test class to serialise
+		ListOfIntegersTestClass testClass = new ListOfIntegersTestClass();
+
+		testClass.integerList = new LinkedList<>();
+		
+		// Create expected PVStructure
+		FieldCreate fieldCreate = FieldFactory.getFieldCreate();
+		PVDataCreate pvDataCreate = PVDataFactory.getPVDataCreate();
+		
+		Union union = fieldCreate.createVariantUnion();
+		
+		// Because of Java Type erasure, the marshaller cannot necessarily know this is an integer list.
+		// It therefore has to assume it's an object list so union array is expected
+		Structure structure = fieldCreate.createFieldBuilder().
+			addArray("integerList", union).
+			createStructure();
+		
+		PVStructure expectedPVStructure = pvDataCreate.createPVStructure(structure);
+		
+		PVStructure serialisedPVStructure = null;
+		
+		try {
+			serialisedPVStructure = marshaller.toPVStructure(testClass);
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+		
+		System.out.println("Serialised Structure:\n" + serialisedPVStructure + "\n---\n");
+		
+		TestHelper.assertPVStructuresEqual(expectedPVStructure, serialisedPVStructure);
+	}
+	
+	@Test
+	public void testEmptyListOfObjects() {
+		PVMarshaller marshaller = new PVMarshaller();
+		
+		// Create test class to serialise
+		ListOfObjectsTestClass testClass = new ListOfObjectsTestClass();
+
+		testClass.objectList = new LinkedList<>();
+		
+		// Create expected PVStructure
+		FieldCreate fieldCreate = FieldFactory.getFieldCreate();
+		PVDataCreate pvDataCreate = PVDataFactory.getPVDataCreate();
+		
+		Union union = fieldCreate.createVariantUnion();
+		
+		Structure structure = fieldCreate.createFieldBuilder().
+			addArray("objectList", union).
+			createStructure();
+		
+		PVStructure expectedPVStructure = pvDataCreate.createPVStructure(structure);
+		
+		PVStructure serialisedPVStructure = null;
+		
+		try {
+			serialisedPVStructure = marshaller.toPVStructure(testClass);
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+		
+		System.out.println("Serialised Structure:\n" + serialisedPVStructure + "\n---\n");
+		
+		TestHelper.assertPVStructuresEqual(expectedPVStructure, serialisedPVStructure);
+	}
 
 	
 	class ArrayOfIntsTestClass {

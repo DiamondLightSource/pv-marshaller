@@ -26,7 +26,8 @@ public class ObjectSerialiser {
 	Serialiser serialiser;
 	Map<Class<?>, IPVStructureSerialiser<?>> registeredSerialisers = new LinkedHashMap<Class<?>, IPVStructureSerialiser<?>>();
 	Map<Class<?>, String> registeredIds = new LinkedHashMap<Class<?>, String>();
-
+	Map<Class<?>, List<String>> registeredFields = new LinkedHashMap<Class<?>, List<String>>();
+	
 	/**
 	 * Constructor
 	 * @param serialiser
@@ -242,6 +243,14 @@ public class ObjectSerialiser {
 	}
 	
 	/**
+	 * Sets the custom id to class mappings
+	 * @param idMappings
+	 */
+	public void setFieldsToSerialise(Map<Class<?>, List<String>> fieldsToSerialise) {
+		registeredFields = fieldsToSerialise;
+	}
+	
+	/**
 	 * Gets the registered custom serialiser for a given class
 	 * @param clazz The class to get the custom serialiser for
 	 * @return the serialiser or null if there isn't one registered
@@ -327,8 +336,73 @@ public class ObjectSerialiser {
 		}
 		return null;
 	}
+	
+	/**
+	 * Gets the registered custom ID mapping for the specified class
+	 * @param clazz The class to get the custom id mapping for
+	 * @return The id or null if there isn't one registered
+	 */
+	private boolean canAddFieldForClass(Class<?> clazz, String fieldName) {
+		boolean foundList = false;
 
-	private static boolean canAddFieldForObject(Field field, Object object) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+		Class<?> classToCheck = clazz;
+		
+		while (classToCheck != Object.class) {
+			
+			if (registeredFields.containsKey(classToCheck)) {
+				foundList = true;
+				List<String> fields = registeredFields.get(classToCheck);
+				
+				if (fields.contains(fieldName)) {
+					return true;
+				}
+			} else {
+				List<Class<?>> classInterfacesList = Arrays.asList(classToCheck.getInterfaces());
+				// Check for id for interface
+				for (Class<?> keyClass : registeredFields.keySet()) {
+					if (keyClass.isInterface()) {
+						if (classInterfacesList.contains(keyClass)) {
+							foundList = true;
+
+							List<String> fields = registeredFields.get(keyClass);
+							
+							if (fields.contains(fieldName)) {
+								return true;
+							}
+						}
+					}
+				}
+			}
+			// Check for id of any base class
+			classToCheck = classToCheck.getSuperclass();
+		}
+		
+		// If we got here, then check the class or its parents or interfaces waeren't found in any list.
+		// If they were then don't add field. If not in any list then can add field
+		if (foundList == true) {
+			return false;
+		}
+		
+		return true;
+	}
+
+	/**
+	 * Determines whether a field can be added for an object.
+	 * @param field The field to check
+	 * @param object The object to check the field for
+	 * @return true if the field should be added for this object
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	private boolean canAddFieldForObject(Field field, Object object) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+		
+		Class<?> objectClass = object.getClass();
+		
+		if (canAddFieldForClass(objectClass, field.getName()) == false) {
+			return false;
+		}
+		
 		Class<?> fieldType = field.getType();
 
 		if (fieldType.equals(int.class) ||
@@ -352,6 +426,13 @@ public class ObjectSerialiser {
 		return false;
 	}
 	
+	/**
+	 * Finds the Getter method for the specified variable in an object
+	 * @param object The object to get the getter in
+	 * @param variableName The variable to get the getter for
+	 * @return The getter method
+	 * @throws IllegalArgumentException
+	 */
 	private static Method findGetter(Object object, String variableName) throws IllegalArgumentException {
 		Class<?> clazz = object.getClass();
 		while (clazz != Object.class)  {

@@ -25,6 +25,7 @@ import org.epics.pvdata.pv.Structure;
  */
 public class MapSerialiser {
 	Serialiser serialiser;
+	private String mapTypeIdKey = null;
 	
 	/**
 	 * Constructor
@@ -32,6 +33,16 @@ public class MapSerialiser {
 	 */
 	public MapSerialiser(Serialiser serialiser) {
 		this.serialiser = serialiser;
+	}
+	
+	/**
+	 * Sets the key to use as the type id for Maps.
+	 * The key will be used to set the ID of the PVStructure, and will not be included in the PVStructure as a field
+	 * @param mapTypeIdKey The key to use
+	 */
+	
+	public void setMapTypeIdKey(String mapTypeIdKey) {
+		this.mapTypeIdKey = mapTypeIdKey;
 	}
 	
 	/**
@@ -48,6 +59,10 @@ public class MapSerialiser {
 		{
 			for (String key : map.keySet())
 			{
+				if (mapTypeIdKey != null && key.equals(mapTypeIdKey) && map.get(key).getClass().equals(String.class)) {
+					fieldBuilder.setId((String)map.get(key));
+					continue;
+				}
 				Object mapValue = map.get(key);
 				Class<?> mapValueType = mapValue.getClass();
 				
@@ -69,75 +84,6 @@ public class MapSerialiser {
 	}
 	
 	/**
-	 * Builds a structure from a map of primitives
-	 * @param map The map
-	 * @param scalarType The primitive type
-	 * @return
-	 */
-	public static Structure buildStructureFromPrimitiveMap(Map<String, ?> map, ScalarType scalarType)
-	{
-		FieldCreate fieldCreate = FieldFactory.getFieldCreate();
-		FieldBuilder fieldBuilder = fieldCreate.createFieldBuilder();
-		
-		if (map != null)
-		{
-			for (String key : map.keySet())
-			{
-				fieldBuilder.add(key, scalarType);
-			}
-		}
-		Structure structure = fieldBuilder.createStructure();
-		
-		return structure;
-	}
-	
-	/**
-	 * Builds a structure from a map of containers
-	 * @param map The map
-	 * @param objectClass The container class
-	 * @return
-	 * @throws Exception
-	 */
-	public Structure buildStructureFromContainerMap(Map<String, ?> map, Class<?> objectClass) throws Exception
-	{
-		FieldCreate fieldCreate = FieldFactory.getFieldCreate();
-		FieldBuilder fieldBuilder = fieldCreate.createFieldBuilder();
-		
-		for (String key : map.keySet())
-		{
-			Structure structure = serialiser.getObjectSerialiser().buildObject(map.get(key));
-			fieldBuilder.add(key, structure);
-		}
-		
-		Structure structure = fieldBuilder.createStructure();
-		
-		return structure;
-	}
-	
-	/**
-	 * Builds a structure from a map of containers
-	 * @param map The map
-	 * @param objectClass The object class
-	 * @return
-	 * @throws Exception
-	 */
-	public Structure buildStructureFromObjectMap(Map<String, ?> map, Class<?> objectClass) throws Exception
-	{
-		FieldCreate fieldCreate = FieldFactory.getFieldCreate();
-		FieldBuilder fieldBuilder = fieldCreate.createFieldBuilder();
-		
-		for (String key : map.keySet())
-		{
-			Structure structure = serialiser.getObjectSerialiser().buildObject(map.get(key));
-			fieldBuilder.add(key, structure);
-		}
-		
-		Structure structure = fieldBuilder.createStructure();
-		
-		return structure;
-	}
-	
-	/**
 	 * Populates a PVStructure with values from a map
 	 * @param name Name of the field in the PVStrucutre to populate
 	 * @param parentStructure The PVStructure to populate
@@ -150,6 +96,9 @@ public class MapSerialiser {
 		{
 			for (String key : map.keySet())
 			{
+				if (mapTypeIdKey != null && key.equals(mapTypeIdKey) && map.get(key).getClass().equals(String.class)) {
+					continue;
+				}
 				Object mapValue = map.get(key);
 				Class<?> mapValueType = mapValue.getClass();
 				
@@ -178,6 +127,9 @@ public class MapSerialiser {
 		{
 			for (String key : map.keySet())
 			{
+				if (mapTypeIdKey != null && key.equals(mapTypeIdKey) && map.get(key).getClass().equals(String.class)) {
+					continue;
+				}
 				Object mapValue = map.get(key);
 				Class<?> mapValueType = mapValue.getClass();
 				

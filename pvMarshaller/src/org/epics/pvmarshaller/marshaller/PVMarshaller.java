@@ -1,6 +1,7 @@
 package org.epics.pvmarshaller.marshaller;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.epics.pvdata.pv.PVStructure;
@@ -19,6 +20,7 @@ public class PVMarshaller {
 	Map<Class<?>, IPVStructureSerialiser<?>> registeredSerialisers = new LinkedHashMap<Class<?>, IPVStructureSerialiser<?>>();
 	Map<String, IPVStructureDeserialiser> registeredDeserialisers = new LinkedHashMap<String, IPVStructureDeserialiser>();
 	Map<Class<?>, String> registeredIds = new LinkedHashMap<Class<?>, String>();
+	Map<Class<?>, List<String>> registeredFields = new LinkedHashMap<Class<?>, List<String>>();
 	Serialiser serialiser = new Serialiser();
 	Deserialiser deserialiser = new Deserialiser();
 	
@@ -30,7 +32,7 @@ public class PVMarshaller {
 	 */
 	public PVStructure toPVStructure(Object source) throws Exception
 	{
-		PVStructure pvStructure = serialiser.toPVStructure(source, registeredSerialisers, registeredIds);
+		PVStructure pvStructure = serialiser.toPVStructure(source, registeredSerialisers, registeredIds, registeredFields);
 
 		return pvStructure;
 	}
@@ -45,6 +47,17 @@ public class PVMarshaller {
 	public <T> T fromPVStructure(PVStructure pvStructure, Class<T> targetClass) throws Exception
 	{
 		return deserialiser.fromPVStructure(pvStructure, targetClass, registeredDeserialisers);
+	}
+	
+	/**
+	 * Populates the specified field within the specified PVStructure with the value of the object
+	 * @param pvStructure The PVStructure to populate
+	 * @param fieldName The field to populate
+	 * @param value The object to use to populate the PVStructure
+	 * @throws Exception
+	 */
+	public void setFieldWithValue(PVStructure pvStructure, String fieldName, Object value) throws Exception {
+		serialiser.setFieldWithValue(pvStructure, fieldName, value);
 	}
 	
 	/**
@@ -77,12 +90,31 @@ public class PVMarshaller {
 	}	
 	
 	/**
-	 * Registers a custom deserialiser for a parcticular class
+	 * Registers a custom deserialiser for a particular class
 	 * @param structureId The Id to use this custom deserialiser for
 	 * @param deserialiser An instance of {@link IPVStructureDeserialiser} to use for this id
 	 */
 	public <T> void registerDeserialiser(String structureId, IPVStructureDeserialiser deserialiser)
 	{
 		registeredDeserialisers.put(structureId, deserialiser);
+	}
+	
+	/**
+	 * Registers a list of fields to serialise for a particular class
+	 * @param clazz The class to register the list for
+	 * @param fieldsToSerialise The list of fields to serialise
+	 */
+	public void registerFieldListForClass(Class<?> clazz, List<String> fieldsToSerialise)
+	{
+		registeredFields.put(clazz, fieldsToSerialise);
+	}
+	
+	/**
+	 * Registers the key to use as the type id for Maps.
+	 * The key will be used to set the ID of the PVStructure, and will not be included in the PVStructure as a field
+	 * @param mapTypeIdKey The key to use
+	 */
+	public void registerMapTypeIdKey(String mapTypeIdKey) {
+		serialiser.getMapSerialiser().setMapTypeIdKey(mapTypeIdKey);
 	}
 }

@@ -989,7 +989,7 @@ public class MapTests {
 		testClass.listMap.put("y", list2);
 		
 		// Create expected PVStructure
-		/*FieldCreate fieldCreate = FieldFactory.getFieldCreate();
+		FieldCreate fieldCreate = FieldFactory.getFieldCreate();
 		PVDataCreate pvDataCreate = PVDataFactory.getPVDataCreate();
 		
 		Union union = fieldCreate.createVariantUnion();
@@ -1008,14 +1008,16 @@ public class MapTests {
 				add("k3", ScalarType.pvInt).
 				add("k4", ScalarType.pvInt).
 				createStructure();
+
+		Structure listMapStructure = fieldCreate.createFieldBuilder().
+				addArray("x", union).
+				addArray("y", union).
+				createStructure();
 		
 		Structure structure = fieldCreate.createFieldBuilder().
-			add("listMap", union).
+			add("listMap", listMapStructure).
 			createStructure();
 		
-		Structure parentStructure = fieldCreate.createFieldBuilder().
-				addArray("listMap", union).
-				createStructure();
 		
 		PVStructure expectedNestedPVStructure1 = pvDataCreate.createPVStructure(nestedStructure1);
 		PVInt primitiveValue11 = expectedNestedPVStructure1.getSubField(PVInt.class, "k1");
@@ -1035,7 +1037,9 @@ public class MapTests {
 		
 		PVStructure expectedPVStructure = pvDataCreate.createPVStructure(structure);
 		
-		PVUnionArray primitiveValue = expectedPVStructure.getSubField(PVUnionArray.class, "mapList");
+		PVStructure lmValue = expectedPVStructure.getStructureField("listMap");
+		
+		PVUnionArray xValue = lmValue.getSubField(PVUnionArray.class, "x");
 		
 		PVUnion pvu1 = pvDataCreate.createPVVariantUnion();
 		pvu1.set(expectedNestedPVStructure1);
@@ -1043,14 +1047,100 @@ public class MapTests {
 		pvu2.set(expectedNestedPVStructure2);
 		
 		PVUnion[] unionArray = {pvu1, pvu2};
-		primitiveValue.put(0, 2, unionArray, 0);*/
+		xValue.put(0, 2, unionArray, 0);
+		
+		PVUnionArray yValue = lmValue.getSubField(PVUnionArray.class, "y");
+		
+		PVUnion pvu3 = pvDataCreate.createPVVariantUnion();
+		pvu3.set(expectedNestedPVStructure3);
+		
+		PVUnion[] yUnionArray = {pvu3};
+		yValue.put(0, 1, yUnionArray, 0);
+		
+		PVStructure serialisedPVStructure = null;
 		
 		try {
-			marshaller.toPVStructure(testClass);
-			fail("No exception thrown");
+			serialisedPVStructure = marshaller.toPVStructure(testClass);
 		} catch (Exception e) {
 			assertTrue(e instanceof IllegalArgumentException);
 		}
+		
+		TestHelper.assertPVStructuresEqual(expectedPVStructure, serialisedPVStructure);
+	}
+	
+	@Test
+	public void testMapOfJavaObjectsWithTypeId() {
+		PVMarshaller marshaller = new PVMarshaller();
+		
+		// Create test class to serialise
+		MapOfJavaObjectsTestClass testClass = new MapOfJavaObjectsTestClass();
+
+		String strVal = "A String";
+		int intVal = 34;
+		Map<String, Object> nestedMap = new LinkedHashMap<String, Object>();
+		nestedMap.put("nestedInt", 43);
+		nestedMap.put("typeid", "NestedTypeID");
+		nestedMap.put("name", "Thing");
+		
+		testClass.objectMap = new LinkedHashMap<String, Object>();
+		testClass.objectMap.put("strVal", strVal);
+		testClass.objectMap.put("intVal", intVal);
+		testClass.objectMap.put("nestedMap", nestedMap);
+		testClass.objectMap.put("typeid", "TestTypeID");
+		
+		// Create expected PVStructure
+		FieldCreate fieldCreate = FieldFactory.getFieldCreate();
+		PVDataCreate pvDataCreate = PVDataFactory.getPVDataCreate();
+
+		Structure nestedMapStructure = fieldCreate.createFieldBuilder().
+				add("nestedInt", ScalarType.pvInt).
+				add("name", ScalarType.pvString).
+				setId("NestedTypeID").
+				createStructure();
+						
+		Structure objMapStructure = fieldCreate.createFieldBuilder().
+				add("strVal", ScalarType.pvString).
+				add("intVal", ScalarType.pvInt).
+				add("nestedMap", nestedMapStructure).
+				setId("TestTypeID").
+				createStructure();
+				
+		Structure structure = fieldCreate.createFieldBuilder().
+			add("objectMap", objMapStructure).
+			createStructure();
+		
+		PVStructure expectedPVStructure = pvDataCreate.createPVStructure(structure);
+		PVStructure mapPVStructure = expectedPVStructure.getStructureField("objectMap");
+		
+		PVInt intValValue = mapPVStructure.getSubField(PVInt.class, "intVal");
+		intValValue.put(34);
+		PVString strValValue = mapPVStructure.getSubField(PVString.class, "strVal");
+		strValValue.put("A String");
+		
+		PVStructure nestedMapPVStructure = mapPVStructure.getStructureField("nestedMap");
+		PVInt nestedIntValue = nestedMapPVStructure.getSubField(PVInt.class, "nestedInt");
+		nestedIntValue.put(43);
+		PVString nestedNameValue = nestedMapPVStructure.getSubField(PVString.class, "name");
+		nestedNameValue.put("Thing");
+		
+		System.out.println("s:");
+		System.out.println(structure);
+		System.out.println("pv:");
+		System.out.println(expectedPVStructure);
+		
+		PVStructure serialisedPVStructure = null;
+		
+		try {
+			marshaller.registerMapTypeIdKey("typeid");
+			serialisedPVStructure = marshaller.toPVStructure(testClass);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+		
+		System.out.println("Serialised Structure:\n" + serialisedPVStructure + "\n---\n");
+		
+		TestHelper.assertPVStructuresEqual(expectedPVStructure, serialisedPVStructure);
 	}
 	
 	class MapOfIntegersTestClass {
@@ -1178,6 +1268,14 @@ public class MapTests {
 
 		public Map<String, List<Map<String, Integer>>> getListMap() {
 			return listMap;
+		}
+	}
+	
+	class MapOfJavaObjectsTestClass {
+		Map<String, Object> objectMap;
+
+		public Map<String, Object> getObjectMap() {
+			return objectMap;
 		}
 	}
 

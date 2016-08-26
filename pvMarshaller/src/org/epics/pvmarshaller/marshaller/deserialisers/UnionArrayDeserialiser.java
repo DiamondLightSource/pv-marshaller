@@ -1,10 +1,8 @@
 package org.epics.pvmarshaller.marshaller.deserialisers;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -22,7 +20,7 @@ import org.epics.pvdata.pv.UnionArrayData;
 
 /**
  * Deserialises a Union Array
- * @author Matt Taylr
+ * @author Matt Taylor
  *
  */
 public class UnionArrayDeserialiser {
@@ -70,7 +68,6 @@ public class UnionArrayDeserialiser {
 			
 			if (parameters[0].getType().isArray()) {
 				Class<?> componentType = parameters[0].getType().getComponentType();
-				System.out.println(componentType);
 				
 				Object newArray = Array.newInstance(componentType, dataArray.length);
 				
@@ -173,7 +170,6 @@ public class UnionArrayDeserialiser {
 			
 			if (ContainerFunctions.isArray(valueClass)) {
 				Class<?> componentType = ContainerFunctions.getComponentType(valueClass);
-				System.out.println(componentType);
 				
 				Object newArray = Array.newInstance(componentType, dataArray.length);
 				

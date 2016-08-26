@@ -2,7 +2,6 @@ package org.epics.pvmarshaller.marshaller.deserialisers;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

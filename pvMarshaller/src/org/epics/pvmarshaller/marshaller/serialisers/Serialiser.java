@@ -1,6 +1,6 @@
 package org.epics.pvmarshaller.marshaller.serialisers;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 
 import org.epics.pvdata.factory.PVDataFactory;
@@ -30,14 +30,15 @@ public class Serialiser {
 	 * @param source The object to convert
 	 * @param customSerialisers Collection of custom serialisers
 	 * @param idMappings Collection of id to class mappings
+	 * @param fieldsToSerialise Collection of fields to class mappings
 	 * @return PVStructure representing the source object
 	 * @throws Exception
 	 */
-	public PVStructure toPVStructure(Object source, Map<Class<?>, IPVStructureSerialiser<?>> customSerialisers, Map<Class<?>, String> idMappings) throws Exception
+	public PVStructure toPVStructure(Object source, Map<Class<?>, IPVStructureSerialiser<?>> customSerialisers, Map<Class<?>, String> idMappings, Map<Class<?>, List<String>> fieldsToSerialise) throws Exception
 	{
 		objectSerialiser.setCustomSerialisers(customSerialisers);
 		objectSerialiser.setIdMappings(idMappings);
-		
+		objectSerialiser.setFieldsToSerialise(fieldsToSerialise);
 		PVStructure pvStructure = toPVStructure(source);
 
 		return pvStructure;
@@ -78,6 +79,25 @@ public class Serialiser {
 	 */
 	public void setValues(Object source, PVStructure pvStructure) throws Exception {
 		objectSerialiser.setValues(source, pvStructure);
+	}
+	
+	/**
+	 * Populates the specified field within the specified PVStructure with the value of the object
+	 * @param pvStructure The PVStructure to populate
+	 * @param fieldName The field to populate
+	 * @param value The object to use to populate the PVStructure
+	 * @throws Exception
+	 */
+	public void setFieldWithValue(PVStructure pvStructure, String fieldName, Object value) throws Exception {
+		Class<?> mapValueType = value.getClass();
+		
+		if (PrimitiveSerialiser.isPrimitive(mapValueType)) {
+			MapSerialiser.setPrimitiveMapValue(pvStructure, fieldName, value, mapValueType);
+		} else if (ContainerSerialiser.isContainer(mapValueType)) {
+			mapSerialiser.setContainerMapValue(pvStructure, fieldName, value, mapValueType);
+		} else {
+			mapSerialiser.setObjectMapValue(pvStructure, fieldName, value, mapValueType);
+		}
 	}
 	
 	/**

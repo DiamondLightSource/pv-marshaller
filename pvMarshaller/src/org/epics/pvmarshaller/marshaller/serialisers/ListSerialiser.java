@@ -265,6 +265,16 @@ public class ListSerialiser {
 		if ((list != null) && (!list.isEmpty())) {
 			Object firstElement = list.get(0);
 			componentType = firstElement.getClass();
+			
+			// check all elements are the same. If not, it's an Object List
+			for (int i = 1; i < list.size(); i++) {
+				if (list.get(i).getClass().equals(componentType) == false) {
+					return Object.class;
+				}
+			}
+		}
+		else {
+			componentType = Object.class;
 		}
 		return componentType;
 	}
