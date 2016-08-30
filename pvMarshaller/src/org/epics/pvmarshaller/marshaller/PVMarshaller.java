@@ -17,10 +17,6 @@ import org.epics.pvmarshaller.marshaller.serialisers.Serialiser;
  */
 public class PVMarshaller {
 	
-	Map<Class<?>, IPVStructureSerialiser<?>> registeredSerialisers = new LinkedHashMap<Class<?>, IPVStructureSerialiser<?>>();
-	Map<String, IPVStructureDeserialiser> registeredDeserialisers = new LinkedHashMap<String, IPVStructureDeserialiser>();
-	Map<Class<?>, String> registeredIds = new LinkedHashMap<Class<?>, String>();
-	Map<Class<?>, List<String>> registeredFields = new LinkedHashMap<Class<?>, List<String>>();
 	Serialiser serialiser = new Serialiser();
 	Deserialiser deserialiser = new Deserialiser();
 	
@@ -32,7 +28,7 @@ public class PVMarshaller {
 	 */
 	public PVStructure toPVStructure(Object source) throws Exception
 	{
-		PVStructure pvStructure = serialiser.toPVStructure(source, registeredSerialisers, registeredIds, registeredFields);
+		PVStructure pvStructure = serialiser.toPVStructure(source);
 
 		return pvStructure;
 	}
@@ -46,7 +42,7 @@ public class PVMarshaller {
 	 */
 	public <T> T fromPVStructure(PVStructure pvStructure, Class<T> targetClass) throws Exception
 	{
-		return deserialiser.fromPVStructure(pvStructure, targetClass, registeredDeserialisers);
+		return deserialiser.fromPVStructure(pvStructure, targetClass);
 	}
 	
 	/**
@@ -58,6 +54,17 @@ public class PVMarshaller {
 	 */
 	public void setFieldWithValue(PVStructure pvStructure, String fieldName, Object value) throws Exception {
 		serialiser.setFieldWithValue(pvStructure, fieldName, value);
+	}
+	
+	/**
+	 * Deserialises and returns a single field within a Structure
+	 * @param pvStructure The structure to get the object from
+	 * @param fieldName The field to deserialise
+	 * @return The deserialised object
+	 * @throws Exception
+	 */
+	public Object getObjectFromField(PVStructure pvStructure, String fieldName) throws Exception {
+		return deserialiser.getObjectFromField(pvStructure, fieldName);
 	}
 	
 	/**
@@ -76,7 +83,7 @@ public class PVMarshaller {
 	 */
 	public <T> void registerSerialiser(Class<T> clazz, IPVStructureSerialiser<T> serialiser)
 	{
-		registeredSerialisers.put(clazz, serialiser);
+		this.serialiser.getObjectSerialiser().addCustomSerialiser(clazz, serialiser);
 	}
 	
 	/**
@@ -86,7 +93,7 @@ public class PVMarshaller {
 	 */
 	public <T> void registerIdForClass(Class<T> clazz, String id)
 	{
-		registeredIds.put(clazz, id);
+		this.serialiser.getObjectSerialiser().addIdMapping(clazz, id);
 	}	
 	
 	/**
@@ -96,7 +103,7 @@ public class PVMarshaller {
 	 */
 	public <T> void registerDeserialiser(String structureId, IPVStructureDeserialiser deserialiser)
 	{
-		registeredDeserialisers.put(structureId, deserialiser);
+		this.deserialiser.getStructureDeserialiser().addCustomDeserialisers(structureId, deserialiser);
 	}
 	
 	/**
@@ -106,7 +113,7 @@ public class PVMarshaller {
 	 */
 	public void registerFieldListForClass(Class<?> clazz, List<String> fieldsToSerialise)
 	{
-		registeredFields.put(clazz, fieldsToSerialise);
+		this.serialiser.getObjectSerialiser().addFieldsToSerialise(clazz, fieldsToSerialise);
 	}
 	
 	/**

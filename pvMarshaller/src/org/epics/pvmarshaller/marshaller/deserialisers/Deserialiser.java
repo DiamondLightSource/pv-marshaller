@@ -39,17 +39,15 @@ public class Deserialiser {
 	}
 	
 	/**
-	 * Converts the specified PVStructure into an object of the type specified with a given set of custom deserialisers
-	 * @param pvStructure The PVStructure to convert
-	 * @param targetClass The class of the expected output object
-	 * @param customDeserialisers A collection of custom deserialisers
-	 * @return An object of type T
+	 * Deserialises a single field within a PVStructure
+	 * @param pvStructure The object to deserialise the field from
+	 * @param fieldName The name of the field to deserialise
+	 * @return The deserialised object
 	 * @throws Exception
 	 */
-	public <T> T fromPVStructure(PVStructure pvStructure, Class<T> targetClass, Map<String, IPVStructureDeserialiser> customDeserialisers) throws Exception {
-		structureDeserialiser.setCustomDeserialisers(customDeserialisers);
-		
-		return fromPVStructure(pvStructure, targetClass);
+	public Object getObjectFromField(PVStructure pvStructure, String fieldName) throws Exception {
+		Map<?, ?> newMap = mapDeserialiser.createMapFromPVStructure(pvStructure, Map.class, Object.class);
+		return newMap.get(fieldName);
 	}
 
 	/**

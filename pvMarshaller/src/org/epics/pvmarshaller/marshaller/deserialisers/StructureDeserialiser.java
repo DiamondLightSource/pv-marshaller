@@ -142,11 +142,11 @@ public class StructureDeserialiser {
 	}
 	
 	/**
-	 * Sets the registered Custom Deserialisers
+	 * Adds a Custom Deserialisers to the register
 	 * @param customDeserialisers
 	 */
-	public void setCustomDeserialisers(Map<String, IPVStructureDeserialiser> customDeserialisers) {
-		registeredDeserialisers = customDeserialisers;
+	public void addCustomDeserialisers(String structureId, IPVStructureDeserialiser deserialiser) {
+		registeredDeserialisers.put(structureId, deserialiser);
 	}
 	
 	/**

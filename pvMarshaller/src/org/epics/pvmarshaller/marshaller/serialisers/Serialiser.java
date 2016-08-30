@@ -24,25 +24,6 @@ public class Serialiser {
 	ListSerialiser listSerialiser = new ListSerialiser(this);
 	MapSerialiser mapSerialiser = new MapSerialiser(this);
 	ObjectSerialiser objectSerialiser = new ObjectSerialiser(this);
-
-	/**
-	 * Converts an Object into a PVStructure with the given set of custom serialisers and custom id to class mappings
-	 * @param source The object to convert
-	 * @param customSerialisers Collection of custom serialisers
-	 * @param idMappings Collection of id to class mappings
-	 * @param fieldsToSerialise Collection of fields to class mappings
-	 * @return PVStructure representing the source object
-	 * @throws Exception
-	 */
-	public PVStructure toPVStructure(Object source, Map<Class<?>, IPVStructureSerialiser<?>> customSerialisers, Map<Class<?>, String> idMappings, Map<Class<?>, List<String>> fieldsToSerialise) throws Exception
-	{
-		objectSerialiser.setCustomSerialisers(customSerialisers);
-		objectSerialiser.setIdMappings(idMappings);
-		objectSerialiser.setFieldsToSerialise(fieldsToSerialise);
-		PVStructure pvStructure = toPVStructure(source);
-
-		return pvStructure;
-	}
 	
 	/**
 	 * Converts an Object into a PVStructure

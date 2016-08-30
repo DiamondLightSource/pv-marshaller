@@ -227,27 +227,27 @@ public class ObjectSerialiser {
 	}
 	
 	/**
-	 * Sets the custom serialisers
+	 * Adds a custom serialiser to the register
 	 * @param customSerialisers
 	 */
-	public void setCustomSerialisers(Map<Class<?>, IPVStructureSerialiser<?>> customSerialisers) {
-		registeredSerialisers = customSerialisers;
+	public void addCustomSerialiser(Class<?> clazz, IPVStructureSerialiser<?> serialiser) {
+		registeredSerialisers.put(clazz, serialiser);
 	}
 	
 	/**
-	 * Sets the custom id to class mappings
+	 * Adds a custom id to class mapping to the register
 	 * @param idMappings
 	 */
-	public void setIdMappings(Map<Class<?>, String> idMappings) {
-		registeredIds = idMappings;
+	public void addIdMapping(Class<?> clazz, String id) {
+		registeredIds.put(clazz, id);
 	}
 	
 	/**
-	 * Sets the custom id to class mappings
+	 * Adds a field list to the register
 	 * @param idMappings
 	 */
-	public void setFieldsToSerialise(Map<Class<?>, List<String>> fieldsToSerialise) {
-		registeredFields = fieldsToSerialise;
+	public void addFieldsToSerialise(Class<?> clazz, List<String> fieldsToSerialise) {
+		registeredFields.put(clazz, fieldsToSerialise);
 	}
 	
 	/**
