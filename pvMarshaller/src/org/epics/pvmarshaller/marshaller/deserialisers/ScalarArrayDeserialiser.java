@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -683,9 +684,15 @@ public class ScalarArrayDeserialiser {
 		while (clazz != Object.class)  {
 			try {
 				java.lang.reflect.Field listField = clazz.getDeclaredField(variableName);
-	            ParameterizedType listType = (ParameterizedType) listField.getGenericType();
-	            Class<?> listClass = (Class<?>) listType.getActualTypeArguments()[0];
-	            return listClass;
+				Type listFieldType = listField.getGenericType();
+				if (listFieldType instanceof ParameterizedType) {
+		            ParameterizedType listType = (ParameterizedType) listFieldType;
+		            Class<?> listClass = (Class<?>) listType.getActualTypeArguments()[0];
+		            return listClass;
+				} else {
+					// No type info on list so assume Object
+					return Object.class;
+				}
 			} catch (NoSuchFieldException ex) {
 				
 			}

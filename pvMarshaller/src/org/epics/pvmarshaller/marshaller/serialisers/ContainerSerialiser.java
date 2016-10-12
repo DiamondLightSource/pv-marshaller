@@ -126,20 +126,23 @@ public class ContainerSerialiser {
 				fieldBuilder.addArray(name, union);
 			}
 		} else if (Map.class.isAssignableFrom(fieldType)) {
-			ParameterizedType pt = (ParameterizedType)field.getGenericType();
-            Type types[] = pt.getActualTypeArguments();
-            if (types.length != 2) {
-            	throw new IllegalArgumentException("Incorrect map length");
-            } else if (!types[0].equals(String.class)) {
-            	throw new IllegalArgumentException("Map keys must be strings: " + name);
-            } else {
-            	field.setAccessible(true);
-    			Method method = Serialiser.findGetter(parentObject, field.getName());
-    			Object mapObject = method.invoke(parentObject);
-				Map<String, ?> map = (Map<String, ?>)mapObject;
-				Structure componentStructure = serialiser.getMapSerialiser().buildStructureFromMap(map);
-				fieldBuilder.add(name, componentStructure);
-            }
+			Type type = field.getGenericType();
+			if (type instanceof ParameterizedType) {
+				ParameterizedType pt = (ParameterizedType)type;
+	            Type types[] = pt.getActualTypeArguments();
+	            if (types.length != 2) {
+	            	throw new IllegalArgumentException("Incorrect map length");
+	            } else if (!types[0].equals(String.class)) {
+	            	throw new IllegalArgumentException("Map keys must be strings: " + name);
+	            } 
+			}
+        	field.setAccessible(true);
+			Method method = Serialiser.findGetter(parentObject, field.getName());
+			Object mapObject = method.invoke(parentObject);
+			Map<String, ?> map = (Map<String, ?>)mapObject;
+			Structure componentStructure = serialiser.getMapSerialiser().buildStructureFromMap(map);
+			fieldBuilder.add(name, componentStructure);
+            
 		} else {
 			throw new IllegalArgumentException("Unsupported container type: " + fieldType);
 		}

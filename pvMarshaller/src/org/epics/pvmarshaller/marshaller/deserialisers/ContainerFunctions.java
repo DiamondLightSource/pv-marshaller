@@ -134,16 +134,22 @@ public class ContainerFunctions {
 		while (clazz != Object.class)  {
 			try {
 				java.lang.reflect.Field listField = clazz.getDeclaredField(variableName);
-	            ParameterizedType listType = (ParameterizedType) listField.getGenericType();
-	            Type type = listType.getActualTypeArguments()[0];
-	            if (type instanceof Class) {
-		            Class<?> listClass = (Class<?>) type; 
-		            return listClass;
-	            } else if (type instanceof ParameterizedType) {
-	            	ParameterizedType pt = (ParameterizedType) type;
-	            	Class<?> listClass = (Class<?>)pt.getRawType();
-		            return listClass;
-	            }
+				Type listFieldtype = listField.getGenericType();
+				if (listFieldtype instanceof ParameterizedType) {
+					ParameterizedType listType = (ParameterizedType) listFieldtype;
+		            Type type = listType.getActualTypeArguments()[0];
+		            if (type instanceof Class) {
+			            Class<?> listClass = (Class<?>) type; 
+			            return listClass;
+		            } else if (type instanceof ParameterizedType) {
+		            	ParameterizedType pt = (ParameterizedType) type;
+		            	Class<?> listClass = (Class<?>)pt.getRawType();
+			            return listClass;
+		            }
+				} else {
+					// No type info, assume Object
+					return Object.class;
+				}
 			} catch (NoSuchFieldException ex) {
 				
 			}
@@ -164,19 +170,25 @@ public class ContainerFunctions {
 		while (clazz != Object.class)  {
 			try {
 				java.lang.reflect.Field listField = clazz.getDeclaredField(variableName);
-	            ParameterizedType listType = (ParameterizedType) listField.getGenericType();
-	            Type type = listType.getActualTypeArguments()[0];
-	            if (type instanceof Class) {
-		            Class<?> listClass = (Class<?>) type; 
-		            return listClass;
-	            } else if (type instanceof ParameterizedType) {
-	            	ParameterizedType pt = (ParameterizedType) type;
-	            	if (!pt.getActualTypeArguments()[0].equals(String.class)) {
-	    				throw new IllegalArgumentException("Map key type was not String");
-	    			}
-	    			
-	    			return pt.getActualTypeArguments()[1];
-	            }
+				Type listFieldType = listField.getGenericType();
+				if (listFieldType instanceof ParameterizedType) {
+		            ParameterizedType listType = (ParameterizedType) listFieldType;
+		            Type type = listType.getActualTypeArguments()[0];
+		            if (type instanceof Class) {
+			            Class<?> listClass = (Class<?>) type; 
+			            return listClass;
+		            } else if (type instanceof ParameterizedType) {
+		            	ParameterizedType pt = (ParameterizedType) type;
+		            	if (!pt.getActualTypeArguments()[0].equals(String.class)) {
+		    				throw new IllegalArgumentException("Map key type was not String");
+		    			}
+		    			
+		    			return pt.getActualTypeArguments()[1];
+		            }
+				} else {
+					// No type info on list, assume Object
+					return Object.class;
+				}
 			} catch (NoSuchFieldException ex) {
 				
 			}

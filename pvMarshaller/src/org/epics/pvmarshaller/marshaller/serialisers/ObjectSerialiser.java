@@ -96,9 +96,11 @@ public class ObjectSerialiser {
 									Object nestedObject = method.invoke(obj);
 									Class<?> nestedObjectClass = nestedObject.getClass();
 									
-									// Check again for primitive here in case of generic class not showing up as a primitive before.
+									// Check again for primitives and containers here in case of generic class not showing up before.
 									if (PrimitiveSerialiser.isPrimitive(nestedObjectClass)) {
 										PrimitiveSerialiser.addGenericToPVStructure(field, fieldBuilder, nestedObject);
+									} else if (ContainerSerialiser.isContainer(nestedObjectClass)) {
+										serialiser.getContainerSerialiser().addToPVStructure(field, fieldBuilder, obj);
 									} else {
 										fieldBuilder.add(field.getName(), buildObjectFromClass(nestedObjectClass, nestedObject));
 									}
@@ -188,10 +190,15 @@ public class ObjectSerialiser {
 			
 			Class<?> clazz = childObject.getClass();
 			
-			// Check again for primitive here in case of generic class not showing up as a primitive before.
+			// Check again for primitives and containers here in case of generic class not showing up before.
 			if (PrimitiveSerialiser.isPrimitive(clazz)) {
 				PrimitiveSerialiser.setGenericFieldValue(childField, parentStructure, parentObject);
-			} else {
+			} 
+			else if (ContainerSerialiser.isContainer(clazz))
+			{
+				serialiser.getContainerSerialiser().setFieldValue(childField, parentStructure, parentObject);
+			}
+			else {
 				
 				PVStructure childPVStructure = parentStructure.getStructureField(childField.getName());
 	

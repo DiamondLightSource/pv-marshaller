@@ -879,6 +879,62 @@ public class MapTests {
 		
 		TestHelper.assertPVStructuresEqual(expectedPVStructure, serialisedPVStructure);
 	}
+	
+	@Test
+	public void testNullEntryInMap() {
+		PVMarshaller marshaller = new PVMarshaller();
+		
+		// Create test class to serialise
+		MapOfObjectsTestClass testClass = new MapOfObjectsTestClass();
+		
+		MapObjectTestClass testObject2 = new MapObjectTestClass();
+		testObject2.primitiveValue = -12345;
+				
+		testClass.objectMap = new LinkedHashMap<String, MapObjectTestClass>();
+		testClass.objectMap.put("object1", null);
+		testClass.objectMap.put("secObj", testObject2);
+		
+		// Create expected PVStructure
+		FieldCreate fieldCreate = FieldFactory.getFieldCreate();
+		PVDataCreate pvDataCreate = PVDataFactory.getPVDataCreate();
+		
+		Structure object1Structure = fieldCreate.createFieldBuilder().
+				add("primitiveValue", ScalarType.pvInt).
+				createStructure();
+		
+		Structure mapStructure = fieldCreate.createFieldBuilder().
+				add("secObj", object1Structure).
+				createStructure();
+		
+		Structure structure = fieldCreate.createFieldBuilder().
+			add("objectMap", mapStructure).
+			createStructure();
+		
+		PVStructure expectedPVStructure = pvDataCreate.createPVStructure(structure);
+		PVStructure mapPVStructure = expectedPVStructure.getStructureField("objectMap");
+				
+		PVStructure secObjPVStructure = mapPVStructure.getStructureField("secObj");
+		PVInt o2XValue = secObjPVStructure.getSubField(PVInt.class, "primitiveValue");
+		o2XValue.put(-12345);
+		
+		System.out.println("s:");
+		System.out.println(structure);
+		System.out.println("pv:");
+		System.out.println(expectedPVStructure);
+		
+		PVStructure serialisedPVStructure = null;
+		
+		try {
+			serialisedPVStructure = marshaller.toPVStructure(testClass);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+		
+		System.out.println("Serialised Structure:\n" + serialisedPVStructure + "\n---\n");
+		
+		TestHelper.assertPVStructuresEqual(expectedPVStructure, serialisedPVStructure);
+	}
 
 	@Test
 	public void testListOfMaps() {

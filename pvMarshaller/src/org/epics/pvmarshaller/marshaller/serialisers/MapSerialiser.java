@@ -1,6 +1,5 @@
 package org.epics.pvmarshaller.marshaller.serialisers;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import org.epics.pvdata.factory.FieldFactory;
@@ -15,7 +14,6 @@ import org.epics.pvdata.pv.PVLong;
 import org.epics.pvdata.pv.PVShort;
 import org.epics.pvdata.pv.PVString;
 import org.epics.pvdata.pv.PVStructure;
-import org.epics.pvdata.pv.ScalarType;
 import org.epics.pvdata.pv.Structure;
 
 /**
@@ -64,17 +62,19 @@ public class MapSerialiser {
 					continue;
 				}
 				Object mapValue = map.get(key);
-				Class<?> mapValueType = mapValue.getClass();
 				
-				if (PrimitiveSerialiser.isPrimitive(mapValueType)) {
-					fieldBuilder.add(key, PrimitiveSerialiser.getScalarType(mapValueType));
-				} else if (ContainerSerialiser.isContainer(mapValueType)) {
-					serialiser.getContainerSerialiser().addToStructureWithContainerObject(mapValueType, key, fieldBuilder, map.get(key));
-				} else {
-	            	Structure componentStructure = serialiser.getObjectSerialiser().buildObject(map.get(key));
-	            	fieldBuilder.add(key, componentStructure);
+				if (mapValue != null) {
+					Class<?> mapValueType = mapValue.getClass();
+					
+					if (PrimitiveSerialiser.isPrimitive(mapValueType)) {
+						fieldBuilder.add(key, PrimitiveSerialiser.getScalarType(mapValueType));
+					} else if (ContainerSerialiser.isContainer(mapValueType)) {
+						serialiser.getContainerSerialiser().addToStructureWithContainerObject(mapValueType, key, fieldBuilder, map.get(key));
+					} else {
+		            	Structure componentStructure = serialiser.getObjectSerialiser().buildObject(map.get(key));
+		            	fieldBuilder.add(key, componentStructure);
+					}
 				}
-				
 			}
 		}
 		
@@ -100,16 +100,19 @@ public class MapSerialiser {
 					continue;
 				}
 				Object mapValue = map.get(key);
-				Class<?> mapValueType = mapValue.getClass();
 				
-				PVStructure mapPVStructure = parentStructure.getStructureField(name);
-				
-				if (PrimitiveSerialiser.isPrimitive(mapValueType)) {
-					setPrimitiveMapValue(mapPVStructure, key, mapValue, mapValueType);
-				} else if (ContainerSerialiser.isContainer(mapValueType)) {
-					setContainerMapValue(mapPVStructure, key, mapValue, mapValueType);
-				} else {
-					setObjectMapValue(mapPVStructure, key, mapValue, mapValueType);
+				if (mapValue != null) {
+					Class<?> mapValueType = mapValue.getClass();
+					
+					PVStructure mapPVStructure = parentStructure.getStructureField(name);
+					
+					if (PrimitiveSerialiser.isPrimitive(mapValueType)) {
+						setPrimitiveMapValue(mapPVStructure, key, mapValue, mapValueType);
+					} else if (ContainerSerialiser.isContainer(mapValueType)) {
+						setContainerMapValue(mapPVStructure, key, mapValue, mapValueType);
+					} else {
+						setObjectMapValue(mapPVStructure, key, mapValue, mapValueType);
+					}
 				}
 			}
 		}
@@ -131,14 +134,16 @@ public class MapSerialiser {
 					continue;
 				}
 				Object mapValue = map.get(key);
-				Class<?> mapValueType = mapValue.getClass();
-				
-				if (PrimitiveSerialiser.isPrimitive(mapValueType)) {
-					setPrimitiveMapValue(mapPVStructure, key, mapValue, mapValueType);
-				} else if (ContainerSerialiser.isContainer(mapValueType)) {
-					setContainerMapValue(mapPVStructure, key, mapValue, mapValueType);
-				} else {
-					setObjectMapValue(mapPVStructure, key, mapValue, mapValueType);
+				if (mapValue != null) {
+					Class<?> mapValueType = mapValue.getClass();
+					
+					if (PrimitiveSerialiser.isPrimitive(mapValueType)) {
+						setPrimitiveMapValue(mapPVStructure, key, mapValue, mapValueType);
+					} else if (ContainerSerialiser.isContainer(mapValueType)) {
+						setContainerMapValue(mapPVStructure, key, mapValue, mapValueType);
+					} else {
+						setObjectMapValue(mapPVStructure, key, mapValue, mapValueType);
+					}
 				}
 			}
 		}

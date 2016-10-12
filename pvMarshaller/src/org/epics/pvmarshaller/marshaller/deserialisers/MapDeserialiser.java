@@ -57,13 +57,20 @@ public class MapDeserialiser {
 		Type valueClass = null;
 		java.lang.reflect.Field objectField = parentObject.getClass().getDeclaredField(fieldName);
 		mapClass = objectField.getType();
-		ParameterizedType pt = (ParameterizedType)objectField.getGenericType();
-        
-		keyClass = pt.getActualTypeArguments()[0];
-		valueClass = pt.getActualTypeArguments()[1];
 		
-		if (!keyClass.equals(String.class)) {
-			throw new IllegalArgumentException("Map key type was not String");
+		Type objectFieldType = objectField.getGenericType();
+		if (objectFieldType instanceof ParameterizedType) {
+			ParameterizedType pt = (ParameterizedType)objectFieldType;
+	        
+			keyClass = pt.getActualTypeArguments()[0];
+			valueClass = pt.getActualTypeArguments()[1];
+			
+			if (!keyClass.equals(String.class)) {
+				throw new IllegalArgumentException("Map key type was not String");
+			}
+		} else {
+			// no type info on the map, assume Object
+			valueClass = Object.class;
 		}
 		
 		return createMapFromPVStructure(pvStructure, mapClass, valueClass);
