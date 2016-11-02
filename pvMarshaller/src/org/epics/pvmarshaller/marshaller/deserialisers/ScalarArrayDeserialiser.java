@@ -6,7 +6,7 @@ import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.epics.pvdata.pv.BooleanArrayData;
@@ -154,7 +154,7 @@ public class ScalarArrayDeserialiser {
 		} else if (List.class.isAssignableFrom(parameters[0].getType()) || parameters[0].getType().equals(Collection.class)) {
 			List<Integer> list;
 			if (parameters[0].getType().isInterface()) {
-				list = new LinkedList<Integer>();
+				list = new ArrayList<Integer>();
 			} else {
 				list = (List) parameters[0].getType().newInstance();
 			}
@@ -223,7 +223,7 @@ public class ScalarArrayDeserialiser {
 		} else if (List.class.isAssignableFrom(parameters[0].getType()) || parameters[0].getType().equals(Collection.class)) {
 			List<Short> list;
 			if (parameters[0].getType().isInterface()) {
-				list = new LinkedList<Short>();
+				list = new ArrayList<Short>();
 			} else {
 				list = (List) parameters[0].getType().newInstance();
 			}
@@ -291,7 +291,7 @@ public class ScalarArrayDeserialiser {
 		} else if (List.class.isAssignableFrom(parameters[0].getType()) || parameters[0].getType().equals(Collection.class)) {
 			List<Long> list;
 			if (parameters[0].getType().isInterface()) {
-				list = new LinkedList<Long>();
+				list = new ArrayList<Long>();
 			} else {
 				list = (List) parameters[0].getType().newInstance();
 			}
@@ -359,7 +359,7 @@ public class ScalarArrayDeserialiser {
 		} else if (List.class.isAssignableFrom(parameters[0].getType()) || parameters[0].getType().equals(Collection.class)) {
 			List<Byte> list;
 			if (parameters[0].getType().isInterface()) {
-				list = new LinkedList<Byte>();
+				list = new ArrayList<Byte>();
 			} else {
 				list = (List) parameters[0].getType().newInstance();
 			}
@@ -427,7 +427,7 @@ public class ScalarArrayDeserialiser {
 		} else if (List.class.isAssignableFrom(parameters[0].getType()) || parameters[0].getType().equals(Collection.class)) {
 			List<Boolean> list;
 			if (parameters[0].getType().isInterface()) {
-				list = new LinkedList<Boolean>();
+				list = new ArrayList<Boolean>();
 			} else {
 				list = (List) parameters[0].getType().newInstance();
 			}
@@ -495,7 +495,7 @@ public class ScalarArrayDeserialiser {
 		} else if (List.class.isAssignableFrom(parameters[0].getType()) || parameters[0].getType().equals(Collection.class)) {
 			List<Float> list;
 			if (parameters[0].getType().isInterface()) {
-				list = new LinkedList<Float>();
+				list = new ArrayList<Float>();
 			} else {
 				list = (List) parameters[0].getType().newInstance();
 			}
@@ -563,7 +563,7 @@ public class ScalarArrayDeserialiser {
 		} else if (List.class.isAssignableFrom(parameters[0].getType()) || parameters[0].getType().equals(Collection.class)) {
 			List<Double> list;
 			if (parameters[0].getType().isInterface()) {
-				list = new LinkedList<Double>();
+				list = new ArrayList<Double>();
 			} else {
 				list = (List) parameters[0].getType().newInstance();
 			}
@@ -642,7 +642,7 @@ public class ScalarArrayDeserialiser {
             if (listClass.equals(String.class)) {
     			List<String> list;
     			if (parameters[0].getType().isInterface()) {
-    				list = new LinkedList<String>();
+    				list = new ArrayList<String>();
     			} else {
     				list = (List) parameters[0].getType().newInstance();
     			}
@@ -653,7 +653,7 @@ public class ScalarArrayDeserialiser {
 			} else if (listClass.equals(Character.class)) {
 				List<Character> list;
 				if (parameters[0].getType().isInterface()) {
-					list = new LinkedList<Character>();
+					list = new ArrayList<Character>();
 				} else {
 					list = (List) parameters[0].getType().newInstance();
 				}

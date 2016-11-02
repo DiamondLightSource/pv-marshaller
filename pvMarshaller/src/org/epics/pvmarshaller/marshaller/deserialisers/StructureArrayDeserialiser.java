@@ -7,7 +7,7 @@ import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -84,7 +84,7 @@ public class StructureArrayDeserialiser {
 
 				List list;
 				if (parameters[0].getType().isInterface()) {
-					list = new LinkedList<>();
+					list = new ArrayList<>();
 				} else {
 					list = (List) parameters[0].getType().newInstance();
 				}
@@ -155,7 +155,7 @@ public class StructureArrayDeserialiser {
 
 				List list;
 				if (ContainerFunctions.isInterface(listClass)) {
-					list = new LinkedList<>();
+					list = new ArrayList<>();
 				} else {
 					list = (List) ((Class<?>)listClass).newInstance();
 				}

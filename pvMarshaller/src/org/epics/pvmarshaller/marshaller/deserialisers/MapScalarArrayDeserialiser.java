@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.epics.pvdata.pv.PVBooleanArray;
@@ -122,7 +122,7 @@ public class MapScalarArrayDeserialiser {
 			List<Integer> list;
 			Class<?> clazz = getListClass(type);
 			if (clazz.isInterface()) {
-				list = new LinkedList<Integer>();
+				list = new ArrayList<Integer>();
 			} else {
 				list = (List) clazz.newInstance();
 			}
@@ -184,7 +184,7 @@ public class MapScalarArrayDeserialiser {
 			List<Short> list;
 			Class<?> clazz = getListClass(type);
 			if (clazz.isInterface()) {
-				list = new LinkedList<Short>();
+				list = new ArrayList<Short>();
 			} else {
 				list = (List) clazz.newInstance();
 			}
@@ -245,7 +245,7 @@ public class MapScalarArrayDeserialiser {
 			List<Long> list;
 			Class<?> clazz = getListClass(type);
 			if (clazz.isInterface()) {
-				list = new LinkedList<Long>();
+				list = new ArrayList<Long>();
 			} else {
 				list = (List) clazz.newInstance();
 			}
@@ -306,7 +306,7 @@ public class MapScalarArrayDeserialiser {
 			List<Byte> list;
 			Class<?> clazz = getListClass(type);
 			if (clazz.isInterface()) {
-				list = new LinkedList<Byte>();
+				list = new ArrayList<Byte>();
 			} else {
 				list = (List) clazz.newInstance();
 			}
@@ -367,7 +367,7 @@ public class MapScalarArrayDeserialiser {
 			List<Boolean> list;
 			Class<?> clazz = getListClass(type);
 			if (clazz.isInterface()) {
-				list = new LinkedList<Boolean>();
+				list = new ArrayList<Boolean>();
 			} else {
 				list = (List) clazz.newInstance();
 			}
@@ -428,7 +428,7 @@ public class MapScalarArrayDeserialiser {
 			List<Float> list;
 			Class<?> clazz = getListClass(type);
 			if (clazz.isInterface()) {
-				list = new LinkedList<Float>();
+				list = new ArrayList<Float>();
 			} else {
 				list = (List) clazz.newInstance();
 			}
@@ -489,7 +489,7 @@ public class MapScalarArrayDeserialiser {
 			List<Double> list;
 			Class<?> clazz = getListClass(type);
 			if (clazz.isInterface()) {
-				list = new LinkedList<Double>();
+				list = new ArrayList<Double>();
 			} else {
 				list = (List) clazz.newInstance();
 			}
@@ -566,7 +566,7 @@ public class MapScalarArrayDeserialiser {
     			List<String> list;
     			Class<?> clazz = getListClass(type);
     			if (clazz.isInterface()) {
-    				list = new LinkedList<String>();
+    				list = new ArrayList<String>();
     			} else {
     				list = (List) clazz.newInstance();
     			}
@@ -578,7 +578,7 @@ public class MapScalarArrayDeserialiser {
 				List<Character> list;
 				Class<?> clazz = getListClass(type);
 				if (clazz.isInterface()) {
-					list = new LinkedList<Character>();
+					list = new ArrayList<Character>();
 				} else {
 					list = (List) clazz.newInstance();
 				}
