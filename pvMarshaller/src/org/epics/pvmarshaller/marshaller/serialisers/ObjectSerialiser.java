@@ -27,6 +27,7 @@ public class ObjectSerialiser {
 	Map<Class<?>, IPVStructureSerialiser<?>> registeredSerialisers = new LinkedHashMap<Class<?>, IPVStructureSerialiser<?>>();
 	Map<Class<?>, String> registeredIds = new LinkedHashMap<Class<?>, String>();
 	Map<Class<?>, List<String>> registeredFields = new LinkedHashMap<Class<?>, List<String>>();
+	Map<Class<?>, List<String>> excludeFields = new LinkedHashMap<Class<?>, List<String>>();
 	
 	/**
 	 * Constructor
@@ -251,10 +252,20 @@ public class ObjectSerialiser {
 	
 	/**
 	 * Adds a field list to the register
-	 * @param idMappings
+	 * @param clazz
+	 * @param fieldsToSerialise
 	 */
 	public void addFieldsToSerialise(Class<?> clazz, List<String> fieldsToSerialise) {
 		registeredFields.put(clazz, fieldsToSerialise);
+	}
+	
+	/**
+	 * Adds a field list to the exclude register
+	 * @param clazz
+	 * @param fieldsToExclude
+	 */
+	public void addFieldsToExclude(Class<?> clazz, List<String> fieldsToExclude) {
+		excludeFields.put(clazz, fieldsToExclude);
 	}
 	
 	/**
@@ -354,6 +365,38 @@ public class ObjectSerialiser {
 
 		Class<?> classToCheck = clazz;
 		
+		// Check for exclude fields
+		while (classToCheck != Object.class) {
+			
+			if (excludeFields.containsKey(classToCheck)) {
+				List<String> fields = excludeFields.get(classToCheck);
+				
+				if (fields.contains(fieldName)) {
+					return false;
+				}
+			} else {
+				List<Class<?>> classInterfacesList = Arrays.asList(classToCheck.getInterfaces());
+				// Check for id for interface
+				for (Class<?> keyClass : excludeFields.keySet()) {
+					if (keyClass.isInterface()) {
+						if (classInterfacesList.contains(keyClass)) {
+
+							List<String> fields = excludeFields.get(keyClass);
+							
+							if (fields.contains(fieldName)) {
+								return false;
+							}
+						}
+					}
+				}
+			}
+			// Check for id of any base class
+			classToCheck = classToCheck.getSuperclass();
+		}
+				
+		classToCheck = clazz;
+		
+		// Check for include fields
 		while (classToCheck != Object.class) {
 			
 			if (registeredFields.containsKey(classToCheck)) {

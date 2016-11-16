@@ -1,8 +1,6 @@
 package org.epics.pvmarshaller.marshaller;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.epics.pvdata.pv.PVStructure;
 import org.epics.pvmarshaller.marshaller.api.IPVStructureDeserialiser;
@@ -114,6 +112,16 @@ public class PVMarshaller {
 	public void registerFieldListForClass(Class<?> clazz, List<String> fieldsToSerialise)
 	{
 		this.serialiser.getObjectSerialiser().addFieldsToSerialise(clazz, fieldsToSerialise);
+	}
+	
+	/**
+	 * Registers a list of fields to exclude from serialisation for a particular class
+	 * @param clazz The class to register the list for
+	 * @param fieldsToExclude The list of fields to exclude
+	 */
+	public void registerExcludeFieldListForClass(Class<?> clazz, List<String> fieldsToExclude)
+	{
+		this.serialiser.getObjectSerialiser().addFieldsToExclude(clazz, fieldsToExclude);
 	}
 	
 	/**
