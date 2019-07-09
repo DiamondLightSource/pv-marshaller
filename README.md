@@ -11,14 +11,23 @@ The package also provides interfaces allowing developers to create their own ser
 Usage:
 
 MyClass myObject = new MyClass();
+
 // ...
+
 // Set members of class
+
 // ...
+
+
 
 PVMarshaller marshaller = new PVMarshaller();
 
+
 // Serialisation
+
 PVStrcture serialisedPVStructure = marshaller.toPVStructure(myObject);
 
+
 // Deserialisation
+
 MyClass deserialisedObject = marshaller.fromPVStructure(serialisedPVStructure, MyClass.class);
