@@ -11,14 +11,20 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.epics.pvdata.factory.FieldFactory;
+import org.epics.pvdata.factory.PVDataFactory;
+import org.epics.pvdata.pv.FieldCreate;
+import org.epics.pvdata.pv.PVDataCreate;
 import org.epics.pvdata.pv.PVStructure;
+import org.epics.pvdata.pv.ScalarType;
+import org.epics.pvdata.pv.Structure;
 import org.epics.pvmarshaller.marshaller.PVMarshaller;
 import org.junit.Test;
 
 public class EndToEndTests {
 
 	@Test
-	public void testPrimitvesEndToEnd() {
+	public void testPrimitivesEndToEnd() {
 		PrimitivesTestClass testObject = new PrimitivesTestClass();
 		testObject.primitiveIntValue = 1;
 		testObject.wrapperIntValue = 2;
@@ -204,7 +210,7 @@ public class EndToEndTests {
 			e.printStackTrace();
 			fail("Unexpected Exception " + e.getMessage());
 		}		
-	}	
+	}
 
 	@Test
 	public void testExtendsEndToEnd() {
@@ -264,6 +270,54 @@ public class EndToEndTests {
 			e.printStackTrace();
 			fail("Unexpected Exception " + e.getMessage());
 		}	
+	}
+	
+	@Test
+	public void testMapEndToEnd() {
+		final Map<String, Object> map = new LinkedHashMap<>();
+		map.put("name", "fred");
+		map.put("age", 52);
+		map.put("doubleVal", 123.456);
+		map.put("typeid", "type/person");
+
+		// pvMarshaller can't serialize a map directly (why?), so wrap it in a Box.
+		Box<Map<String, Object>> wrapper = new Box<>();
+		wrapper.setMyThing(map);
+		
+		// Also create expected PVStructure, so we can check the type id entry has been
+		// converted to the id, not just another field
+		FieldCreate fieldCreate = FieldFactory.getFieldCreate();
+		PVDataCreate pvDataCreate = PVDataFactory.getPVDataCreate();
+		
+		Structure expectedMapStructure = fieldCreate.createFieldBuilder()
+				.add("name", ScalarType.pvString)
+				.add("age", ScalarType.pvInt)
+				.add("doubleVal", ScalarType.pvDouble)
+				.setId("type/person")
+				.createStructure();
+		Structure expectedWrapperStructure = fieldCreate.createFieldBuilder()
+				.add("myThing", expectedMapStructure)
+				.createStructure();
+
+		PVStructure expectedPVStructure = pvDataCreate.createPVStructure(expectedWrapperStructure);
+		PVStructure expectedMapPVStructure = expectedPVStructure.getStructureField("myThing");
+		expectedMapPVStructure.getStringField("name").put("fred");
+		expectedMapPVStructure.getIntField("age").put(52);
+		expectedMapPVStructure.getDoubleField("doubleVal").put(123.456);
+		
+		try {
+			PVMarshaller marshaller = new PVMarshaller();
+			marshaller.registerMapTypeIdKey("typeid");
+
+			PVStructure pvStructure = marshaller.toPVStructure(wrapper);
+			assertEquals(expectedPVStructure, pvStructure);
+			
+			Box<?> deserialized = marshaller.fromPVStructure(pvStructure, Box.class);
+			assertEquals(deserialized, wrapper);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Unexpected Exception " + e.getMessage());
+		}
 	}
 	
 	public static class PrimitivesTestClass

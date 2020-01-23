@@ -35,6 +35,7 @@ import org.epics.pvdata.pv.ScalarType;
 import org.epics.pvdata.pv.Structure;
 import org.epics.pvdata.pv.Union;
 import org.epics.pvmarshaller.marshaller.PVMarshaller;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class DeserialiseMapsTests {
@@ -789,7 +790,7 @@ public class DeserialiseMapsTests {
 			assertTrue(e.getMessage().contains("unknownMap"));
 		}
 	}
-
+	
 	@Test
 	public void testDeserialiseUnknownMapWithIgnore() {
 		
@@ -1410,6 +1411,45 @@ public class DeserialiseMapsTests {
 		assertEquals(expectedObject, deserialisedObject);
 	}
 	
+	@Test
+	public void testDeserializeMapWithTypeId() {
+		PVMarshaller marshaller = new PVMarshaller();
+		
+		// create a map to deserialise directly
+		Map<String, Object> expectedObject = new HashMap<>();
+		expectedObject.put("name", "fred");
+		expectedObject.put("age", 52);
+		expectedObject.put("doubleVal", 123.456);
+		expectedObject.put("typeid", "type/person");
+		
+		// Create expected PVStructure
+		FieldCreate fieldCreate = FieldFactory.getFieldCreate();
+		PVDataCreate pvDataCreate = PVDataFactory.getPVDataCreate();
+		
+		Structure structure = fieldCreate.createFieldBuilder()
+				.add("name", ScalarType.pvString)
+				.add("age", ScalarType.pvInt)
+				.add("doubleVal", ScalarType.pvDouble)
+				.setId("type/person")
+				.createStructure();
+		
+		PVStructure testPvStructure = pvDataCreate.createPVStructure(structure);
+		testPvStructure.getStringField("name").put("fred");
+		testPvStructure.getIntField("age").put(52);
+		testPvStructure.getDoubleField("doubleVal").put(123.456);
+		
+		Object deserialisedObject = null;
+		try {
+			marshaller.registerMapTypeIdKey("typeid");
+			deserialisedObject = marshaller.fromPVStructure(testPvStructure, null); // TODO or call getMapDeserializer()
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		} 
+		
+		assertEquals(expectedObject, deserialisedObject);
+	}
+
 	public static class MapOfPrimitivesTestClass {
 		Map<String, Integer> integerMap;
 		Map<String, Short> shortMap;
