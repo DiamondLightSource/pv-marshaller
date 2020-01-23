@@ -22,7 +22,9 @@ import org.epics.pvdata.pv.Structure;
  *
  */
 public class MapSerialiser {
-	Serialiser serialiser;
+	
+	private Serialiser serialiser;
+	
 	private String mapTypeIdKey = null;
 	
 	/**

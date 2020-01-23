@@ -1,15 +1,16 @@
 package org.epics.pvmarshaller.marshaller.deserialisers;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.epics.pvdata.pv.Field;
 import org.epics.pvdata.pv.PVBoolean;
 import org.epics.pvdata.pv.PVByte;
 import org.epics.pvdata.pv.PVDouble;
+import org.epics.pvdata.pv.PVField;
 import org.epics.pvdata.pv.PVFloat;
 import org.epics.pvdata.pv.PVInt;
 import org.epics.pvdata.pv.PVLong;
@@ -20,8 +21,6 @@ import org.epics.pvdata.pv.PVUByte;
 import org.epics.pvdata.pv.PVUInt;
 import org.epics.pvdata.pv.PVULong;
 import org.epics.pvdata.pv.PVUShort;
-import org.epics.pvdata.pv.Field;
-import org.epics.pvdata.pv.PVField;
 import org.epics.pvdata.pv.PVUnion;
 import org.epics.pvdata.pv.Structure;
 
@@ -32,7 +31,9 @@ import org.epics.pvdata.pv.Structure;
  */
 public class MapDeserialiser {
 
-	Deserialiser deserialiser;
+	private Deserialiser deserialiser;
+	
+	private String mapTypeIdKey; 
 	
 	/**
 	 * Constructor
@@ -42,6 +43,10 @@ public class MapDeserialiser {
 		this.deserialiser = deserialiser;
 	}
 	
+	public void setMapTypeIdKey(String mapTypeIdKey) {
+		this.mapTypeIdKey = mapTypeIdKey;
+	}
+
 	/**
 	 * Creates a map from the given PVStructure
 	 * @param pvStructure PVStructure representing a map to deserialise
@@ -96,6 +101,11 @@ public class MapDeserialiser {
 		}
 		
 		Structure structure = pvStructure.getStructure();
+		
+		String typeId = structure.getID();
+		if (typeId != null && mapTypeIdKey != null) {
+			newMap.put(mapTypeIdKey, typeId);
+		}
 		
 		Field structureFields[] = structure.getFields();
 		

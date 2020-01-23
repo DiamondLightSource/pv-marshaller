@@ -131,5 +131,6 @@ public class PVMarshaller {
 	 */
 	public void registerMapTypeIdKey(String mapTypeIdKey) {
 		serialiser.getMapSerialiser().setMapTypeIdKey(mapTypeIdKey);
+		deserialiser.getMapDeserialiser().setMapTypeIdKey(mapTypeIdKey);
 	}
 }
