@@ -18,7 +18,5 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/epics-pvaccess-5.0.2.jar"/>
-	<classpathentry kind="lib" path="lib/epics-pvdata-6.0.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
