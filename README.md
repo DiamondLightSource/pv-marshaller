@@ -1,5 +1,7 @@
 # pv-marshaller
 
+[![Build Status](https://travis-ci.org/DiamondLightSource/pv-marshaller.svg?branch=master)](https://travis-ci.org/DiamondLightSource/pv-marshaller)
+
 pvMarshaller is a package that converts between Java Objects and pvData PVStructures
 
 Serialisation is the process of converting a Java Object into a PVStructure
