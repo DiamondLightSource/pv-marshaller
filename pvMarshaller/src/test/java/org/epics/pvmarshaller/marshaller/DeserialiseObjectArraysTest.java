@@ -1,4 +1,4 @@
-package org.epics.pvmarshaller.marshaller.tests;
+package org.epics.pvmarshaller.marshaller;
 
 import static org.junit.Assert.*;
 
@@ -21,7 +21,7 @@ import org.epics.pvdata.pv.Structure;
 import org.epics.pvmarshaller.marshaller.PVMarshaller;
 import org.junit.Test;
 
-public class DeserialiseObjectArraysTests {
+public class DeserialiseObjectArraysTest {
 
 	@Test
 	public void testDeserialiseArrayOfObjects() {

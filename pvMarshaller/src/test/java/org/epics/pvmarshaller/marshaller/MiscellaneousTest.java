@@ -1,4 +1,4 @@
-package org.epics.pvmarshaller.marshaller.tests;
+package org.epics.pvmarshaller.marshaller;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -29,7 +29,7 @@ import org.epics.pvmarshaller.marshaller.deserialisers.Deserialiser;
 import org.epics.pvmarshaller.marshaller.serialisers.Serialiser;
 import org.junit.Test;
 
-public class MiscellaneousTests {
+public class MiscellaneousTest {
 			
 	@Test
 	public void testROIList() {

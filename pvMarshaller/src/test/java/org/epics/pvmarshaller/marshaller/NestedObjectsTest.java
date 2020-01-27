@@ -1,4 +1,4 @@
-package org.epics.pvmarshaller.marshaller.tests;
+package org.epics.pvmarshaller.marshaller;
 
 import static org.junit.Assert.*;
 
@@ -22,7 +22,7 @@ import org.epics.pvmarshaller.marshaller.PVMarshaller;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class NestedObjectsTests {
+public class NestedObjectsTest {
 
 	@Test
 	public void testNestedClass() {

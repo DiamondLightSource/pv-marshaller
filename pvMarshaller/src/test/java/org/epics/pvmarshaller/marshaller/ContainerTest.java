@@ -1,4 +1,4 @@
-package org.epics.pvmarshaller.marshaller.tests;
+package org.epics.pvmarshaller.marshaller;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -32,7 +32,7 @@ import org.epics.pvdata.pv.Union;
 import org.epics.pvmarshaller.marshaller.PVMarshaller;
 import org.junit.Test;
 
-public class ContainerTests {
+public class ContainerTest {
 
 	@Test
 	public void testArrayOfIntegers() {

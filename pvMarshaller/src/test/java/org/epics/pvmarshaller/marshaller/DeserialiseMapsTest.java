@@ -1,4 +1,4 @@
-package org.epics.pvmarshaller.marshaller.tests;
+package org.epics.pvmarshaller.marshaller;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -38,7 +38,7 @@ import org.epics.pvmarshaller.marshaller.PVMarshaller;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class DeserialiseMapsTests {
+public class DeserialiseMapsTest {
 
 	@Test
 	public void testDeserialiseMapOfIntegers() {

@@ -1,4 +1,4 @@
-package org.epics.pvmarshaller.marshaller.tests;
+package org.epics.pvmarshaller.marshaller;
 
 import static org.junit.Assert.*;
 
@@ -25,7 +25,7 @@ import org.epics.pvdata.pv.Union;
 import org.epics.pvmarshaller.marshaller.PVMarshaller;
 import org.junit.Test;
 
-public class UnionTests {
+public class UnionTest {
 	
 	@Test
 	public void testDeserialiseVariableUnion() {

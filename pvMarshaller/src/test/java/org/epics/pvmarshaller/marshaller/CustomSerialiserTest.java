@@ -1,4 +1,4 @@
-package org.epics.pvmarshaller.marshaller.tests;
+package org.epics.pvmarshaller.marshaller;
 
 import static org.junit.Assert.*;
 
@@ -26,7 +26,7 @@ import org.epics.pvmarshaller.marshaller.api.IPVStructureSerialiser;
 import org.epics.pvmarshaller.marshaller.serialisers.Serialiser;
 import org.junit.Test;
 
-public class CustomSerialiserTests {
+public class CustomSerialiserTest {
 
 	@Test
 	public void testRegisterClassSerialiser() {
